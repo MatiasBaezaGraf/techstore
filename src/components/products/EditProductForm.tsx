@@ -1,7 +1,5 @@
 "use client";
 
-import { Product } from "@/app/types/types";
-
 import {
 	Card,
 	CardContent,
@@ -12,7 +10,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "../ui/button";
 import { Label } from "../ui/label";
-import { ArrowLeft, Camera, Image, Loader2, X } from "lucide-react";
+import { ArrowLeft, Camera, Loader2, Image, X } from "lucide-react";
 import { Textarea } from "../ui/textarea";
 import {
 	Select,
@@ -22,19 +20,23 @@ import {
 	SelectValue,
 } from "../ui/select";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "@/hooks/use-toast";
 import { Switch } from "../ui/switch";
 import Link from "next/link";
+import { Product } from "@/app/types/types";
 
-export const NewProductForm = ({
-	insertProduct,
+export const EditProductForm = ({
+	productToEdit,
+	editProduct,
 }: {
-	insertProduct: (product: any) => Promise<void>;
+	productToEdit: any | null;
+	editProduct: (product: any, previousImageName: string) => Promise<void>;
 }) => {
 	const router = useRouter();
 
 	const [isSubmitting, setIsSubmitting] = useState(false);
+	const [previousImageName, setPreviousImageName] = useState("");
 	const [product, setProduct] = useState({
 		name: "",
 		description: "",
@@ -45,17 +47,32 @@ export const NewProductForm = ({
 		available: true,
 	});
 
+	useEffect(() => {
+		setProduct({
+			name: productToEdit[0].name,
+			description: productToEdit[0].description,
+			price: productToEdit[0].price,
+			category: productToEdit[0].category,
+			image: null,
+			show: productToEdit[0].show,
+			available: productToEdit[0].available,
+		});
+		setPreviousImageName(productToEdit[0].imageName);
+	}, [productToEdit]);
+
 	const categorias = ["Smartphones", "Computadoras"];
 
 	const handleInputChange = (
 		e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
 	) => {
 		const { name, value } = e.target;
-		setProduct((prev) => ({ ...prev, [name]: value }));
+
+		setProduct((prev: any) => ({ ...prev, [name]: value }));
 	};
 
 	const handleSelectChange = (value: string) => {
-		setProduct((prev) => ({ ...prev, category: value }));
+		if (value === "") return;
+		setProduct((prev: any) => ({ ...prev, category: value }));
 	};
 
 	const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -64,12 +81,12 @@ export const NewProductForm = ({
 		}
 	};
 
-	const handleVisibilityChange = (checked: boolean) => {
-		setProduct((prev) => ({ ...prev, show: checked }));
+	const handleAvailabilityChange = (checked: boolean) => {
+		setProduct((prev: any) => ({ ...prev, available: checked }));
 	};
 
-	const handleAvailabilityChange = (checked: boolean) => {
-		setProduct((prev) => ({ ...prev, available: checked }));
+	const handleVisibilityChange = (checked: boolean) => {
+		setProduct((prev: any) => ({ ...prev, show: checked }));
 	};
 
 	const handleSubmit = async (e: React.FormEvent) => {
@@ -77,14 +94,17 @@ export const NewProductForm = ({
 		setIsSubmitting(true);
 
 		try {
-			await insertProduct({
-				...product,
-				price: parseFloat(product.price),
-			});
+			await editProduct(
+				{
+					...product,
+					price: parseFloat(product.price),
+				},
+				previousImageName
+			);
 
 			toast({
-				title: "Producto agregado",
-				description: "El producto ha sido agregado exitosamente.",
+				title: "Producto actualizado",
+				description: "El producto ha sido actualizado exitosamente.",
 				duration: 1500,
 			});
 
@@ -92,7 +112,7 @@ export const NewProductForm = ({
 		} catch (error) {
 			toast({
 				title: "Error",
-				description: "Ocurrió un error al agregar el producto.",
+				description: "Ocurrió un error al actualizar el producto.",
 				duration: 5000,
 				variant: "destructive",
 			});
@@ -100,6 +120,16 @@ export const NewProductForm = ({
 			setIsSubmitting(false);
 		}
 	};
+
+	if (!product)
+		return (
+			<div className="container mx-auto p-4 flex flex-col h-screen justify-center items-center  ">
+				<Loader2 size={50} className="mx-auto animate-spin" />
+				<span className="text-base text-neutral-500 mt-4">
+					Obteniendo el producto
+				</span>
+			</div>
+		);
 
 	return (
 		<div className="container mx-auto p-2 max-w-md">
@@ -113,7 +143,7 @@ export const NewProductForm = ({
 							</Button>
 						</Link>
 						<CardTitle className="text-2xl font-bold">
-							Agregar Nuevo Producto
+							Editar Producto
 						</CardTitle>
 					</div>
 				</CardHeader>
@@ -124,7 +154,7 @@ export const NewProductForm = ({
 							<Input
 								id="name"
 								name="name"
-								value={product.name}
+								defaultValue={product.name}
 								onChange={handleInputChange}
 								required
 							/>
@@ -134,7 +164,7 @@ export const NewProductForm = ({
 							<Textarea
 								id="description"
 								name="description"
-								value={product.description}
+								defaultValue={product.description}
 								onChange={handleInputChange}
 								required
 							/>
@@ -147,14 +177,18 @@ export const NewProductForm = ({
 								type="number"
 								min="0"
 								step="0.01"
-								value={product.price}
+								defaultValue={product.price}
 								onChange={handleInputChange}
 								required
 							/>
 						</div>
 						<div className="space-y-2">
 							<Label htmlFor="categoria">Categoría</Label>
-							<Select onValueChange={handleSelectChange} required>
+							<Select
+								value={product.category}
+								onValueChange={handleSelectChange}
+								required
+							>
 								<SelectTrigger>
 									<SelectValue placeholder="Selecciona una categoría" />
 								</SelectTrigger>
@@ -198,7 +232,7 @@ export const NewProductForm = ({
 										variant="outline"
 										onClick={() => document.getElementById("image")?.click()}
 									>
-										<Camera className="mr-2 h-4 w-4" /> Subir Foto
+										<Camera className="mr-2 h-4 w-4" /> Subir Foto Nueva
 									</Button>
 								)}
 							</div>
@@ -224,10 +258,10 @@ export const NewProductForm = ({
 								{isSubmitting ? (
 									<>
 										<Loader2 className="mr-2 h-4 w-4 animate-spin" />
-										Agregando...
+										Actualizando...
 									</>
 								) : (
-									"Agregar Producto"
+									"Actualizar Producto"
 								)}
 							</Button>
 						</CardFooter>

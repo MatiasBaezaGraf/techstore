@@ -1,7 +1,7 @@
 import { NewProductForm } from "@/components/products/NewProductForm";
-import { revalidatePath } from "next/cache";
 
 import { createClient } from "@/app/utils/server";
+import { redirect } from "next/navigation";
 
 export default function NewProductPage() {
 	async function insertProduct(product: {
@@ -9,23 +9,40 @@ export default function NewProductPage() {
 		description: string;
 		price: number;
 		category: string;
-		image: string;
+		image?: File;
 		show: boolean;
+		available: boolean;
 	}) {
 		"use server";
 
 		const supabase = await createClient();
 
-		const { data, error } = await supabase.from("products").insert([product]);
+		const productToInsert = {
+			name: product.name,
+			description: product.description,
+			price: product.price,
+			category: product.category,
+			imageName: product.image?.name || "",
+			show: product.show,
+		};
 
-		console.log(data);
+		const { data: productInserted, error: productError } = await supabase
+			.from("products")
+			.insert([productToInsert]);
 
-		if (error) {
-			throw error;
+		if (productError) {
+			throw productError;
 		}
 
-		// Revalida la página para que se muestren los datos actualizados
-		revalidatePath("/products");
+		if (product.image) {
+			const { data: imageInserted, error: imageError } = await supabase.storage
+				.from("productImages")
+				.upload(product.image.name, product.image);
+
+			if (imageError) {
+				throw imageError;
+			}
+		}
 	}
 
 	return <NewProductForm insertProduct={insertProduct} />;
