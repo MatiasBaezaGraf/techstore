@@ -6,14 +6,24 @@ export default async function EditProductPage({
 }: {
 	params: { id: string };
 }) {
-	const supabase = await createClient();
-
 	const { id } = await params;
 
-	const { data, error } = await supabase
-		.from("products")
-		.select("*")
-		.eq("id", id);
+	async function getProductToEdit(id: string) {
+		"use server";
+
+		const supabase = await createClient();
+
+		const { data, error } = await supabase
+			.from("products")
+			.select("*")
+			.eq("id", id);
+
+		if (error) {
+			throw error;
+		}
+
+		return data;
+	}
 
 	async function editProduct(
 		product: {
@@ -46,7 +56,7 @@ export default async function EditProductPage({
 		const { data: productEdited, error: productError } = await supabase
 			.from("products")
 			.update(productToEdit)
-			.eq("id", id);
+			.eq("id", params.id);
 
 		if (productError) {
 			throw productError;
@@ -72,5 +82,11 @@ export default async function EditProductPage({
 		}
 	}
 
-	return <EditProductForm productToEdit={data} editProduct={editProduct} />;
+	return (
+		<EditProductForm
+			getProductToEdit={getProductToEdit}
+			productId={id}
+			editProduct={editProduct}
+		/>
+	);
 }

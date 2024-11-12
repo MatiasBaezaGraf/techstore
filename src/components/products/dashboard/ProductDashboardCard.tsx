@@ -6,36 +6,56 @@ import {
 	CardFooter,
 	CardHeader,
 	CardTitle,
-} from "../ui/card";
-import { Switch } from "../ui/switch";
+} from "../../ui/card";
+import { Switch } from "../../ui/switch";
 import { Edit, ImageOff, Trash2 } from "lucide-react";
 import Link from "next/link";
-import { Label } from "../ui/label";
-import { Button } from "../ui/button";
+import { Label } from "../../ui/label";
+import { Button } from "../../ui/button";
 import { Product } from "@/app/types/types";
 import { useState } from "react";
 import { toast } from "@/hooks/use-toast";
+import {
+	Dialog,
+	DialogClose,
+	DialogContent,
+	DialogDescription,
+	DialogFooter,
+	DialogHeader,
+	DialogTitle,
+	DialogTrigger,
+} from "@/components/ui/dialog";
 
 export const ProductDashboardCard = ({
 	product,
-	updateProductAvailable,
+	updateProductShow,
+	deleteProduct,
 }: {
 	product: Product;
-	updateProductAvailable: any;
+	updateProductShow: (product: Product) => void;
+	deleteProduct: (product: Product) => void;
 }) => {
 	const cdnUrl = process.env.NEXT_PUBLIC_SUPABASE_CDN_URL;
 
-	const [productAvailable, setProductAvailable] = useState<any>(
-		product.available
-	);
+	const [productShow, setProductShow] = useState<any>(product.show);
 
-	const handleAvailabilityChange = async () => {
-		setProductAvailable(!productAvailable);
-		await updateProductAvailable(product, !productAvailable);
+	const handleShowChange = async () => {
+		setProductShow(!productShow);
+		await updateProductShow(product);
 
 		toast({
 			title: "Producto actualizado",
 			description: "El producto ha sido actualizado exitosamente.",
+			duration: 1500,
+		});
+	};
+
+	const handleDeleteProduct = async () => {
+		await deleteProduct(product);
+
+		toast({
+			title: "Producto eliminado",
+			description: "El producto ha sido eliminado exitosamente.",
 			duration: 1500,
 		});
 	};
@@ -70,11 +90,8 @@ export const ProductDashboardCard = ({
 			</CardContent>
 			<CardFooter className="p-4 pt-0 flex justify-between">
 				<div className="flex items-center space-x-2">
-					<Switch
-						checked={productAvailable}
-						onCheckedChange={handleAvailabilityChange}
-					/>
-					<Label>{productAvailable ? "Visible" : "Oculto"}</Label>
+					<Switch checked={productShow} onCheckedChange={handleShowChange} />
+					<Label>Producto Visible</Label>
 				</div>
 				<div className="flex space-x-2">
 					<Link href={`/dashboard/edit-product/${product.id}`}>
@@ -82,9 +99,27 @@ export const ProductDashboardCard = ({
 							<Edit className="h-4 w-4" />
 						</Button>
 					</Link>
-					<Button variant="outline" size="icon">
-						<Trash2 className="h-4 w-4" />
-					</Button>
+					<Dialog>
+						<DialogTrigger asChild>
+							<Button variant="outline" size="icon">
+								<Trash2 className="h-4 w-4" />
+							</Button>
+						</DialogTrigger>
+						<DialogContent>
+							<DialogHeader>
+								<DialogTitle>Eliminar producto</DialogTitle>
+								<DialogDescription>
+									¿Estás seguro que deseas eliminar el producto? Esta acción no
+									se puede deshacer.
+								</DialogDescription>
+							</DialogHeader>
+							<DialogFooter>
+								<DialogClose asChild>
+									<Button onClick={handleDeleteProduct}>Confirmar</Button>
+								</DialogClose>
+							</DialogFooter>
+						</DialogContent>
+					</Dialog>
 				</div>
 			</CardFooter>
 		</Card>

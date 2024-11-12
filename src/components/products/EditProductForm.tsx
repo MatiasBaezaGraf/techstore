@@ -27,10 +27,12 @@ import Link from "next/link";
 import { Product } from "@/app/types/types";
 
 export const EditProductForm = ({
-	productToEdit,
+	productId,
+	getProductToEdit,
 	editProduct,
 }: {
-	productToEdit: any | null;
+	productId: string;
+	getProductToEdit: (id: string) => Promise<Product[]>;
 	editProduct: (product: any, previousImageName: string) => Promise<void>;
 }) => {
 	const router = useRouter();
@@ -48,17 +50,23 @@ export const EditProductForm = ({
 	});
 
 	useEffect(() => {
-		setProduct({
-			name: productToEdit[0].name,
-			description: productToEdit[0].description,
-			price: productToEdit[0].price,
-			category: productToEdit[0].category,
-			image: null,
-			show: productToEdit[0].show,
-			available: productToEdit[0].available,
-		});
-		setPreviousImageName(productToEdit[0].imageName);
-	}, [productToEdit]);
+		const getAndSetProductToEdit = async () => {
+			const productToEdit = await getProductToEdit(productId);
+
+			setProduct({
+				name: productToEdit[0].name,
+				description: productToEdit[0].description,
+				price: productToEdit[0].price.toString(),
+				category: productToEdit[0].category,
+				image: null,
+				show: productToEdit[0].show,
+				available: productToEdit[0].available,
+			});
+			setPreviousImageName(productToEdit[0].imageName || "");
+		};
+
+		getAndSetProductToEdit();
+	}, []);
 
 	const categorias = ["Smartphones", "Computadoras"];
 
@@ -121,7 +129,7 @@ export const EditProductForm = ({
 		}
 	};
 
-	if (!product)
+	if (!product.name)
 		return (
 			<div className="container mx-auto p-4 flex flex-col h-screen justify-center items-center  ">
 				<Loader2 size={50} className="mx-auto animate-spin" />

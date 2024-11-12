@@ -1,19 +1,30 @@
-import { ProductsDashboard } from "@/components/products/ProductsDashboard";
+import { ProductsDashboard } from "@/components/products/dashboard/ProductsDashboard";
 import { createClient } from "../utils/server";
 import { Product } from "../types/types";
+import { revalidatePath } from "next/cache";
 
 export default async function DashboardPage() {
-	const supabase = await createClient();
+	async function fetchProducts() {
+		"use server";
 
-	const { data, error } = await supabase.from("products").select("*");
+		const supabase = await createClient();
 
-	async function updateProductAvailable(product: Product) {
+		const { data, error } = await supabase.from("products").select("*");
+
+		if (error) {
+			throw error;
+		}
+
+		return data;
+	}
+
+	async function updateProductShow(product: Product) {
 		"use server";
 
 		const supabase = await createClient();
 
 		const productToUpdate = {
-			available: !product.available,
+			show: !product.show,
 		};
 
 		const { data, error } = await supabase
@@ -26,10 +37,37 @@ export default async function DashboardPage() {
 		}
 	}
 
+	async function deleteProduct(product: Product) {
+		"use server";
+
+		const supabase = await createClient();
+
+		const { data: productError, error } = await supabase
+			.from("products")
+			.delete()
+			.eq("id", product.id);
+
+		if (productError) {
+			throw error;
+		}
+
+		if (product.imageName) {
+			console.log("Deleting image from storage", product.imageName);
+			// Remove the image from the storage
+			const { data: imageError, error: imageDeleteError } =
+				await supabase.storage
+					.from("productImages")
+					.remove([product.imageName]);
+		}
+
+		revalidatePath("/dashboard");
+	}
+
 	return (
 		<ProductsDashboard
-			fetchedProducts={data}
-			updateProductAvailable={updateProductAvailable}
+			fetchProducts={fetchProducts}
+			updateProductShow={updateProductShow}
+			deleteProduct={deleteProduct}
 		/>
 	);
 }

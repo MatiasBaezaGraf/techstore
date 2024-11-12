@@ -14,9 +14,9 @@ import {
 	Search,
 	Trash2,
 } from "lucide-react";
-import { Button } from "../ui/button";
-import { Input } from "../ui/input";
-import { Label } from "../ui/label";
+import { Button } from "../../ui/button";
+import { Input } from "../../ui/input";
+import { Label } from "../../ui/label";
 import {
 	Sheet,
 	SheetClose,
@@ -25,25 +25,30 @@ import {
 	SheetHeader,
 	SheetTitle,
 	SheetTrigger,
-} from "../ui/sheet";
+} from "../../ui/sheet";
 import {
 	Select,
 	SelectContent,
 	SelectItem,
 	SelectTrigger,
 	SelectValue,
-} from "../ui/select";
+} from "../../ui/select";
 import { Filters, Product } from "@/app/types/types";
 import { ProductDashboardCard } from "./ProductDashboardCard";
 
 export const ProductsDashboard = ({
-	fetchedProducts,
-	updateProductAvailable,
+	fetchProducts,
+	updateProductShow,
+	deleteProduct,
 }: {
-	fetchedProducts: Product[] | null;
-	updateProductAvailable: any;
+	fetchProducts: () => Promise<any[]>;
+	updateProductShow: (product: Product) => void;
+	deleteProduct: (product: Product) => void;
 }) => {
 	const [products, setProducts] = useState<Product[] | null>(null);
+	const [fetchedProducts, setFetchedProducts] = useState<Product[] | null>(
+		null
+	);
 
 	const [filters, setFilters] = useState<Filters>({
 		name: "",
@@ -51,11 +56,23 @@ export const ProductsDashboard = ({
 		visibility: null,
 	});
 
+	const onDeleteProduct = async (product: Product) => {
+		await deleteProduct(product);
+		setProducts(
+			(prevProducts) => prevProducts?.filter((p) => p.id !== product.id) || null
+		);
+	};
+
 	useEffect(() => {
-		if (fetchedProducts) {
+		const getAndSetProducts = async () => {
+			const products = await fetchProducts();
+
+			setFetchedProducts(products);
 			setProducts(products);
-		}
-	}, [fetchedProducts]);
+		};
+
+		getAndSetProducts();
+	}, []);
 
 	useEffect(() => {
 		let filteredProducts = fetchedProducts?.filter((product) => {
@@ -192,7 +209,8 @@ export const ProductsDashboard = ({
 						<ProductDashboardCard
 							key={product.id}
 							product={product}
-							updateProductAvailable={updateProductAvailable}
+							updateProductShow={updateProductShow}
+							deleteProduct={onDeleteProduct}
 						/>
 					))}
 				</div>
