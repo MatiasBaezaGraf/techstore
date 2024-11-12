@@ -53,6 +53,11 @@ export const EditProductForm = ({
 		const getAndSetProductToEdit = async () => {
 			const productToEdit = await getProductToEdit(productId);
 
+			if (!productToEdit || productToEdit.length === 0) {
+				router.push("/dashboard");
+				return;
+			}
+
 			setProduct({
 				name: productToEdit[0].name,
 				description: productToEdit[0].description,

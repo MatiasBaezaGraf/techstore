@@ -1,5 +1,6 @@
 import { createClient } from "@/app/utils/server";
 import { EditProductForm } from "@/components/products/EditProductForm";
+import { redirect } from "next/navigation";
 
 export default async function EditProductPage({
 	params,
@@ -19,7 +20,7 @@ export default async function EditProductPage({
 			.eq("id", id);
 
 		if (error) {
-			throw error;
+			redirect("/dashboard");
 		}
 
 		return data;
@@ -56,7 +57,7 @@ export default async function EditProductPage({
 		const { data: productEdited, error: productError } = await supabase
 			.from("products")
 			.update(productToEdit)
-			.eq("id", params.id);
+			.eq("id", id);
 
 		if (productError) {
 			throw productError;
