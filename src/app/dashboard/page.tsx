@@ -15,7 +15,7 @@ export default async function DashboardPage() {
 			throw error;
 		}
 
-		return data;
+		return data.reverse();
 	}
 
 	async function updateProductShow(product: Product) {
