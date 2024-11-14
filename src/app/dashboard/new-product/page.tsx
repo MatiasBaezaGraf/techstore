@@ -8,10 +8,12 @@ export default function NewProductPage() {
 		name: string;
 		description: string;
 		price: number;
-		category: string;
+		category_id: string;
 		image?: File;
 		show: boolean;
 		available: boolean;
+		new: boolean;
+		highlighted: boolean;
 	}) {
 		"use server";
 
@@ -21,9 +23,12 @@ export default function NewProductPage() {
 			name: product.name,
 			description: product.description,
 			price: product.price,
-			category: product.category,
+			category_id: product.category_id,
 			imageName: product.image?.name || "",
 			show: product.show,
+			available: product.available,
+			new: product.new,
+			highlighted: product.highlighted,
 		};
 
 		const { data: productInserted, error: productError } = await supabase
@@ -45,5 +50,24 @@ export default function NewProductPage() {
 		}
 	}
 
-	return <NewProductForm insertProduct={insertProduct} />;
+	async function fetchCategories() {
+		"use server";
+
+		const supabase = await createClient();
+
+		const { data, error } = await supabase.from("categories").select("*");
+
+		if (error) {
+			throw error;
+		}
+
+		return data;
+	}
+
+	return (
+		<NewProductForm
+			insertProduct={insertProduct}
+			fetchCategories={fetchCategories}
+		/>
+	);
 }

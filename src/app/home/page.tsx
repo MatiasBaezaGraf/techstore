@@ -13,6 +13,7 @@ import { Instagram, Search } from "lucide-react";
 import { createClient } from "../utils/server";
 import { HighlightedProductsCarousel } from "@/components/home/HighlightedProductsCarousel";
 import Link from "next/link";
+import { CategoriesCarousel } from "@/components/home/CategoriesCarousel";
 
 const categorias = [
 	{ nombre: "Smartphones", imagen: "/smartphones.png" },
@@ -25,7 +26,24 @@ export default function HomePage() {
 
 		const supabase = await createClient();
 
-		const { data, error } = await supabase.from("products").select("*");
+		const { data, error } = await supabase
+			.from("products")
+			.select("*")
+			.eq("highlighted", true);
+
+		if (error) {
+			throw error;
+		}
+
+		return data;
+	}
+
+	async function fetchCategories() {
+		"use server";
+
+		const supabase = await createClient();
+
+		const { data, error } = await supabase.from("categories").select("*");
 
 		if (error) {
 			throw error;
@@ -49,36 +67,7 @@ export default function HomePage() {
 
 			{/* Carrusel de categorías */}
 			<div className="mt-4 px-4">
-				<h2 className="text-xl font-bold  mb-2 text-alternative">Categorías</h2>
-				<Carousel
-					opts={{
-						loop: true,
-					}}
-					className="w-full"
-				>
-					<CarouselContent>
-						{categorias.map((categoria, index) => (
-							<CarouselItem key={index} className="basis-full">
-								<div className="relative h-52 w-full rounded-lg">
-									<Image
-										src={categoria.imagen}
-										alt={categoria.nombre}
-										layout="fill"
-										objectFit="cover"
-										className="rounded-lg"
-									/>
-									<div className="absolute inset-0 bg-black border border-neutral-400 rounded-lg bg-opacity-40 flex items-center justify-center">
-										<h3 className="text-white text-2xl font-bold">
-											{categoria.nombre}
-										</h3>
-									</div>
-								</div>
-							</CarouselItem>
-						))}
-					</CarouselContent>
-					<CarouselPrevious className="left-2  border-0" />
-					<CarouselNext className="right-2  border-0" />
-				</Carousel>
+				<CategoriesCarousel fetchCategories={fetchCategories} />
 			</div>
 
 			{/* Carrusel de productos destacados */}

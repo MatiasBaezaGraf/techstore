@@ -24,29 +24,34 @@ import { useEffect, useState } from "react";
 import { toast } from "@/hooks/use-toast";
 import { Switch } from "../ui/switch";
 import Link from "next/link";
-import { Product } from "@/app/types/types";
+import { Category, Product } from "@/app/types/types";
 
 export const EditProductForm = ({
 	productId,
 	getProductToEdit,
 	editProduct,
+	fetchCategories,
 }: {
 	productId: string;
 	getProductToEdit: (id: string) => Promise<Product[]>;
 	editProduct: (product: any, previousImageName: string) => Promise<void>;
+	fetchCategories: () => Promise<Category[]>;
 }) => {
 	const router = useRouter();
 
 	const [isSubmitting, setIsSubmitting] = useState(false);
+	const [categories, setCategories] = useState<Category[]>([]);
 	const [previousImageName, setPreviousImageName] = useState("");
 	const [product, setProduct] = useState({
 		name: "",
 		description: "",
 		price: "",
-		category: "",
+		category_id: "",
 		image: null as File | null,
 		show: true,
 		available: true,
+		new: true,
+		highlighted: false,
 	});
 
 	useEffect(() => {
@@ -62,18 +67,25 @@ export const EditProductForm = ({
 				name: productToEdit[0].name,
 				description: productToEdit[0].description,
 				price: productToEdit[0].price.toString(),
-				category: productToEdit[0].category,
+				category_id: productToEdit[0].category_id.toString(),
 				image: null,
 				show: productToEdit[0].show,
 				available: productToEdit[0].available,
+				new: productToEdit[0].new,
+				highlighted: productToEdit[0].highlighted,
 			});
 			setPreviousImageName(productToEdit[0].imageName || "");
 		};
 
-		getAndSetProductToEdit();
-	}, []);
+		const getAndSetCategories = async () => {
+			const categories = await fetchCategories();
 
-	const categorias = ["Smartphones", "Computadoras"];
+			setCategories(categories);
+		};
+
+		getAndSetProductToEdit();
+		getAndSetCategories();
+	}, []);
 
 	const handleInputChange = (
 		e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -85,7 +97,7 @@ export const EditProductForm = ({
 
 	const handleSelectChange = (value: string) => {
 		if (value === "") return;
-		setProduct((prev: any) => ({ ...prev, category: value }));
+		setProduct((prev: any) => ({ ...prev, category_id: value }));
 	};
 
 	const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -198,7 +210,7 @@ export const EditProductForm = ({
 						<div className="space-y-2">
 							<Label htmlFor="categoria">Categoría</Label>
 							<Select
-								value={product.category}
+								value={product.category_id}
 								onValueChange={handleSelectChange}
 								required
 							>
@@ -206,9 +218,12 @@ export const EditProductForm = ({
 									<SelectValue placeholder="Selecciona una categoría" />
 								</SelectTrigger>
 								<SelectContent>
-									{categorias.map((categoria) => (
-										<SelectItem key={categoria} value={categoria}>
-											{categoria}
+									{categories.map((category) => (
+										<SelectItem
+											key={category.id}
+											value={category.id.toString()}
+										>
+											{category.name}
 										</SelectItem>
 									))}
 								</SelectContent>
@@ -254,7 +269,9 @@ export const EditProductForm = ({
 							<Switch
 								id="show"
 								checked={product.show}
-								onCheckedChange={handleVisibilityChange}
+								onCheckedChange={(checked) =>
+									setProduct((prev) => ({ ...prev, show: checked }))
+								}
 							/>
 							<Label htmlFor="visibilidad">Producto visible</Label>
 						</div>
@@ -262,9 +279,31 @@ export const EditProductForm = ({
 							<Switch
 								id="show"
 								checked={product.available}
-								onCheckedChange={handleAvailabilityChange}
+								onCheckedChange={(checked) =>
+									setProduct((prev) => ({ ...prev, available: checked }))
+								}
 							/>
 							<Label htmlFor="visibilidad">Disponibilidad inmediata</Label>
+						</div>
+						<div className="flex items-center space-x-2">
+							<Switch
+								id="new"
+								checked={product.new}
+								onCheckedChange={(checked) =>
+									setProduct((prev) => ({ ...prev, new: checked }))
+								}
+							/>
+							<Label htmlFor="visibilidad">Producto nuevo</Label>
+						</div>
+						<div className="flex items-center space-x-2">
+							<Switch
+								id="highlighted"
+								checked={product.highlighted}
+								onCheckedChange={(checked) =>
+									setProduct((prev) => ({ ...prev, highlighted: checked }))
+								}
+							/>
+							<Label htmlFor="visibilidad">Producto destacado</Label>
 						</div>
 						<CardFooter className="px-0">
 							<Button type="submit" className="w-full" disabled={isSubmitting}>

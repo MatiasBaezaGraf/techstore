@@ -12,26 +12,28 @@ export const HighlightedProductCard = ({ product }: { product: Product }) => {
 			<div className="flex flex-col justify-start">
 				<div className="relative aspect-square">
 					<Image
-						src={`${cdnUrl}/${product.imageName}`}
+						src={`${cdnUrl}/productImages/${product.imageName}`}
 						alt={product.name}
 						layout="fill"
 						objectFit="contain"
 						className="p-4 bg-white rounded-t-lg"
 					/>
 				</div>
-				<CardContent className="p-4 flex flex-col justify-between">
+				<CardContent className="p-4 flex flex-col justify-center">
 					<h3 className="text-2xl font-bold text-accent">${product.price}</h3>
-					<h3 className="text-sm font- text-alternative mb-2 line-clamp-2">
+					<h3 className="text-sm font- text-alternative  line-clamp-2">
 						{product.name}
 					</h3>
+					<p className="text-sm text-neutral-400 line-clamp-3">
+						{product.new ? "Nuevo" : "Reacondicionado"}
+					</p>
 				</CardContent>
 			</div>
-			{/* <CardFooter className="p-4 pt-0">
-				<Button className="w-full bg-accent hover:bg-green-700 text-alternative">
-					<MessageCircle className="w-4 h-4 mr-2" />
-					Consultar
-				</Button>
-			</CardFooter> */}
+			{product.available && (
+				<CardFooter className="bg-accent p-2 flex items-center text-xs font-semibold justify-center pt-2">
+					Disponibilidad inmediata
+				</CardFooter>
+			)}
 		</Card>
 	);
 };

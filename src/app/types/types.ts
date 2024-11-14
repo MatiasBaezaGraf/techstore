@@ -3,16 +3,39 @@ export type Product = {
 	name: string;
 	description: string;
 	price: number;
-	category: string;
+	category_id: string;
 	imageName?: string;
 	show: boolean;
 	available: boolean;
+	new: boolean;
+	highlighted: boolean;
 };
 
 export type Filters = {
-	name: string;
-	category: string;
-	visibility: boolean | null;
+	name?: string;
+	category_id?: string | "todas";
+	visibility?: boolean | null;
 	priceMin?: number;
 	priceMax?: number;
+	new?: boolean;
+	available?: boolean;
+};
+
+export type Category = {
+	id: number;
+	name: string;
+	icon: "Laptop" | "Tablet" | "TabletSmartphone" | "Gamepad2";
+	imageName?: string;
+};
+
+export type Pagination = {
+	page: number;
+	limit: number;
+	totalPages: number;
+	pageItems: Product[];
+};
+
+export type Sorting = {
+	sortBy?: string;
+	sortDirection?: string;
 };

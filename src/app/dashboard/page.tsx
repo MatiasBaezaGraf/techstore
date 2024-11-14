@@ -18,6 +18,20 @@ export default async function DashboardPage() {
 		return data.reverse();
 	}
 
+	async function fetchCategories() {
+		"use server";
+
+		const supabase = await createClient();
+
+		const { data, error } = await supabase.from("categories").select("*");
+
+		if (error) {
+			throw error;
+		}
+
+		return data;
+	}
+
 	async function updateProductShow(product: Product) {
 		"use server";
 
@@ -66,6 +80,7 @@ export default async function DashboardPage() {
 	return (
 		<ProductsDashboard
 			fetchProducts={fetchProducts}
+			fetchCategories={fetchCategories}
 			updateProductShow={updateProductShow}
 			deleteProduct={deleteProduct}
 		/>

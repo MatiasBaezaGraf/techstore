@@ -2,36 +2,43 @@
 
 import Image from "next/image";
 
-import { ChevronLeft, Laptop, Menu, Smartphone } from "lucide-react";
-import { Button } from "../ui/button";
 import {
-	Sheet,
-	SheetClose,
-	SheetContent,
-	SheetFooter,
-	SheetHeader,
-	SheetOverlay,
-	SheetTitle,
-	SheetTrigger,
-} from "../ui/sheet";
+	ChevronLeft,
+	Laptop,
+	Menu,
+	TabletSmartphone,
+	Gamepad2,
+	Tablet,
+	Tag,
+	RefreshCcw,
+} from "lucide-react";
+import { Button } from "../ui/button";
+import { Sheet, SheetContent, SheetTitle, SheetTrigger } from "../ui/sheet";
 import { ScrollArea } from "../ui/scroll-area";
-import { useState } from "react";
-import { H1 } from "../ui/typography";
+import { useEffect, useState } from "react";
 import { Logo } from "../general/Logo";
+import { Category } from "@/app/types/types";
 
-export const SidebarMenu = () => {
+export const iconMap = {
+	Laptop,
+	Tablet,
+	TabletSmartphone,
+	Gamepad2,
+};
+
+export const SidebarMenu = ({
+	fetchCategories,
+}: {
+	fetchCategories: () => Promise<any[]>;
+}) => {
 	const [isOpen, setIsOpen] = useState(false);
+	const [categories, setCategories] = useState<Category[]>([]);
 
-	const categorias = [
-		{
-			icon: Smartphone,
-			name: "Smartphones",
-		},
-		{
-			icon: Laptop,
-			name: "Computadoras",
-		},
-	];
+	useEffect(() => {
+		fetchCategories().then((data) => {
+			setCategories(data);
+		});
+	}, []);
 
 	return (
 		<Sheet open={isOpen}>
@@ -69,17 +76,45 @@ export const SidebarMenu = () => {
 				<ScrollArea className="h-full mt-6 rounded-md border border-accent p-2 ">
 					<nav>
 						<ul className="">
-							{categorias.map((categoria, index) => (
-								<li key={index}>
-									<Button
-										variant="ghost"
-										className="w-full justify-start text-base text-alternative"
-									>
-										<categoria.icon className="mr-2 h-5 w-5" />
-										{categoria.name}
-									</Button>
-								</li>
-							))}
+							{categories.length > 0
+								? categories.map((category, index) => {
+										const IconElement = iconMap[category.icon];
+
+										return (
+											<li key={index}>
+												<Button
+													variant="ghost"
+													className="w-full justify-start text-base text-alternative"
+												>
+													<IconElement />
+													{category.name}
+												</Button>
+											</li>
+										);
+								  })
+								: [1, 2, 3, 4].map((_, index) => (
+										<li key={index}>
+											<div className="bg-secondary-light h-8 mb-2 w-full rounded-md animate-pulse"></div>
+										</li>
+								  ))}
+							<li>
+								<Button
+									variant="ghost"
+									className="w-full justify-start text-base text-alternative"
+								>
+									<Tag />
+									Nuevos
+								</Button>
+							</li>
+							<li>
+								<Button
+									variant="ghost"
+									className="w-full justify-start text-base text-alternative"
+								>
+									<RefreshCcw />
+									Usados
+								</Button>
+							</li>
 						</ul>
 					</nav>
 				</ScrollArea>

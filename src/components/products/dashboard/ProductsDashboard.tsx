@@ -33,26 +33,29 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "../../ui/select";
-import { Filters, Product } from "@/app/types/types";
+import { Category, Filters, Product } from "@/app/types/types";
 import { ProductDashboardCard } from "./ProductDashboardCard";
 
 export const ProductsDashboard = ({
 	fetchProducts,
+	fetchCategories,
 	updateProductShow,
 	deleteProduct,
 }: {
 	fetchProducts: () => Promise<any[]>;
+	fetchCategories: () => Promise<Category[]>;
 	updateProductShow: (product: Product) => void;
 	deleteProduct: (product: Product) => void;
 }) => {
 	const [products, setProducts] = useState<Product[] | null>(null);
+	const [categories, setCategories] = useState<Category[]>([]);
 	const [fetchedProducts, setFetchedProducts] = useState<Product[] | null>(
 		null
 	);
 
 	const [filters, setFilters] = useState<Filters>({
 		name: "",
-		category: "",
+		category_id: "",
 		visibility: null,
 	});
 
@@ -71,19 +74,26 @@ export const ProductsDashboard = ({
 			setProducts(products);
 		};
 
+		const getAndSetCategories = async () => {
+			const categories = await fetchCategories();
+
+			setCategories(categories);
+		};
+
 		getAndSetProducts();
+		getAndSetCategories();
 	}, []);
 
 	useEffect(() => {
 		let filteredProducts = fetchedProducts?.filter((product) => {
 			let name = product.name.toLowerCase();
-			let category = product.category.toLowerCase();
+			let category_id = product.category_id;
 			let visibility = product.show;
 
 			return (
-				name.includes(filters.name.toLowerCase()) &&
-				category.includes(filters.category.toLowerCase()) &&
-				(filters.visibility === null || visibility === filters.visibility)
+				(!filters.name || name.includes(filters.name.toLowerCase())) &&
+				(!filters.category_id || category_id === filters.category_id) &&
+				(filters.visibility === undefined || visibility === filters.visibility)
 			);
 		});
 
@@ -100,10 +110,8 @@ export const ProductsDashboard = ({
 			</div>
 		);
 
-	const categorias = [
-		"Todas",
-		...new Set(fetchedProducts?.map((p) => p.category)),
-	];
+	console.log(categories);
+	console.log(products);
 
 	return (
 		<div className="container mx-auto p-4">
@@ -147,11 +155,13 @@ export const ProductsDashboard = ({
 						<div>
 							<Label htmlFor="categoria">Categoría</Label>
 							<Select
-								value={filters.category === "" ? "todos" : filters.category}
+								value={
+									filters.category_id === "" ? "todas" : filters.category_id
+								}
 								onValueChange={(value) => {
 									setFilters((prev) => ({
 										...prev,
-										category: value === "todos" ? "" : value,
+										category_id: value === "todas" ? "" : value,
 									}));
 								}}
 							>
@@ -159,9 +169,13 @@ export const ProductsDashboard = ({
 									<SelectValue placeholder="Selecciona una categoría" />
 								</SelectTrigger>
 								<SelectContent>
-									{categorias.map((categoria) => (
-										<SelectItem key={categoria} value={categoria}>
-											{categoria}
+									<SelectItem value="todas">Todas</SelectItem>
+									{categories.map((category) => (
+										<SelectItem
+											key={category.id}
+											value={category.id.toString()}
+										>
+											{category.name}
 										</SelectItem>
 									))}
 								</SelectContent>
@@ -205,14 +219,21 @@ export const ProductsDashboard = ({
 				</SheetContent>
 
 				<div className="space-y-4">
-					{products.map((product) => (
-						<ProductDashboardCard
-							key={product.id}
-							product={product}
-							updateProductShow={updateProductShow}
-							deleteProduct={onDeleteProduct}
-						/>
-					))}
+					{categories.length > 0 &&
+						products.map((product) => (
+							<ProductDashboardCard
+								key={product.id}
+								product={product}
+								category={
+									categories.find(
+										(category) =>
+											category.id.toString() === product.category_id.toString()
+									)!
+								}
+								updateProductShow={updateProductShow}
+								deleteProduct={onDeleteProduct}
+							/>
+						))}
 				</div>
 			</Sheet>
 		</div>

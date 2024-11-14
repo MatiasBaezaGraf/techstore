@@ -12,7 +12,7 @@ import { Edit, ImageOff, Trash2 } from "lucide-react";
 import Link from "next/link";
 import { Label } from "../../ui/label";
 import { Button } from "../../ui/button";
-import { Product } from "@/app/types/types";
+import { Category, Product } from "@/app/types/types";
 import { useState } from "react";
 import { toast } from "@/hooks/use-toast";
 import {
@@ -28,10 +28,12 @@ import {
 
 export const ProductDashboardCard = ({
 	product,
+	category,
 	updateProductShow,
 	deleteProduct,
 }: {
 	product: Product;
+	category: Category;
 	updateProductShow: (product: Product) => void;
 	deleteProduct: (product: Product) => void;
 }) => {
@@ -66,7 +68,7 @@ export const ProductDashboardCard = ({
 				<div className="flex items-center space-x-4">
 					{product.imageName ? (
 						<Image
-							src={cdnUrl + "/" + product.imageName}
+							src={`${cdnUrl}/productImages/${product.imageName}`}
 							alt={product.name}
 							width={70}
 							height={70}
@@ -80,7 +82,7 @@ export const ProductDashboardCard = ({
 
 					<div>
 						<CardTitle className="text-lg">{product.name}</CardTitle>
-						<p className="text-sm text-muted-foreground">{product.category}</p>
+						<p className="text-sm text-muted-foreground">{category.name}</p>
 					</div>
 				</div>
 			</CardHeader>
