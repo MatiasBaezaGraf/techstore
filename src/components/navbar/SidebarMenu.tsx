@@ -82,7 +82,7 @@ export const SidebarMenu = ({
 											<li key={index}>
 												<Link
 													href={`/search?category_id=${category.id}`}
-													className="w-full justify-start text-base text-alternative bg-secondary-dark hover:bg-secondary"
+													className="w-full flex flex-row gap-2 justify-start text-base text-alternative bg-secondary-dark hover:bg-secondary"
 												>
 													<IconElement />
 													{category.name}

@@ -55,23 +55,22 @@ export const CategoriesCarousel = ({
 				<CarouselContent>
 					{categories.map((category, index) => (
 						<CarouselItem key={index} className="basis-full">
-							<Link
-								href={`/search?category_id=${category.id}`}
-								className="relative h-52 w-full rounded-lg transform duration-200 hover:scale-[1.01] hover:border-primary"
-							>
-								<Image
-									src={cdnUrl + "/categoryImages/" + category.imageName}
-									alt={category.name}
-									layout="fill"
-									objectFit="cover"
-									className="rounded-lg"
-								/>
-								<div className="absolute inset-0 bg-black border border-neutral-700 rounded-lg bg-opacity-40 flex items-center justify-center">
-									<h3 className="text-white text-2xl font-bold">
-										{category.name}
-									</h3>
-								</div>
-							</Link>
+							<div className="relative h-52 w-full rounded-lg transform duration-200 hover:scale-[1.01] hover:border-primary">
+								<Link href={`/search?category_id=${category.id}`}>
+									<Image
+										src={cdnUrl + "/categoryImages/" + category.imageName}
+										alt={category.name}
+										layout="fill"
+										objectFit="cover"
+										className="rounded-lg"
+									/>
+									<div className="absolute inset-0 bg-black border border-neutral-700 rounded-lg bg-opacity-40 flex items-center justify-center">
+										<h3 className="text-white text-2xl font-bold">
+											{category.name}
+										</h3>
+									</div>
+								</Link>
+							</div>
 						</CarouselItem>
 					))}
 				</CarouselContent>
