@@ -9,12 +9,7 @@ import {
 	SheetTrigger,
 } from "../ui/sheet";
 import { Button } from "../ui/button";
-import {
-	ArrowDownUp,
-	ChevronDown,
-	ChevronUp,
-	SlidersVertical,
-} from "lucide-react";
+import { ArrowDownUp, ChevronDown } from "lucide-react";
 import { Label } from "../ui/label";
 import {
 	Select,
@@ -27,14 +22,16 @@ import {
 export const SortingBar = ({
 	sorting,
 	handleSortingChange,
+	cleanSorting,
 }: {
 	sorting: Sorting;
-	handleSortingChange: (attribute: string, value: any) => void;
+	handleSortingChange: (attribute: string, value: string) => void;
+	cleanSorting: () => void;
 }) => {
 	const [isSortingOpen, setSortingOpen] = useState(false);
 
 	return (
-		<div className="flex justify-between items-center mb-4 w-full">
+		<div className="flex justify-between items-center w-full">
 			<Sheet open={isSortingOpen} onOpenChange={setSortingOpen}>
 				<SheetTrigger asChild>
 					<Button
@@ -108,6 +105,15 @@ export const SortingBar = ({
 							onClick={() => setSortingOpen(false)}
 						>
 							Aplicar
+						</Button>
+						<Button
+							className="w-full bg-secondary-light hover:bg-secondary/80 text-white"
+							onClick={() => {
+								cleanSorting();
+								setSortingOpen(false);
+							}}
+						>
+							Limpiar
 						</Button>
 					</div>
 				</SheetContent>

@@ -14,3 +14,7 @@ body {
 		--secondary: #141414;
 	}
 }
+
+.min-h-withNav {
+	min-height: calc(100vh - 4rem);
+}

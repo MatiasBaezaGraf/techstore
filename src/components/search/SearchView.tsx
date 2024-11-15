@@ -13,6 +13,8 @@ import { PaginationControls } from "./PaginationControls";
 import { ProductsRepeater } from "./ProductsRepeater";
 import { FiltersBar } from "./FiltersBar";
 import { SortingBar } from "./SortingBar";
+import { Loader2, Search } from "lucide-react";
+import { Input } from "../ui/input";
 
 export const SearchView = ({
 	fetchProducts,
@@ -55,7 +57,7 @@ export const SearchView = ({
 
 	const [pagination, setPagination] = useState<PaginationType>({
 		page: 1,
-		limit: 2,
+		limit: 6,
 		totalPages: 0,
 		pageItems: [],
 	});
@@ -117,9 +119,10 @@ export const SearchView = ({
 	}, []);
 
 	useEffect(() => {
-		const applyFilters = () => {
+		const applyFiltersAndSorting = () => {
 			if (products) {
-				const filteredCalculatedProducts = products!.filter((product) => {
+				// Filtrado
+				const filteredCalculatedProducts = products.filter((product) => {
 					return (
 						(!filters.name ||
 							product.name
@@ -137,56 +140,38 @@ export const SearchView = ({
 					);
 				});
 
-				console.log(
-					Math.ceil(filteredCalculatedProducts.length / pagination.limit)
+				// Ordenamiento
+				const filteredAndSortedProducts = filteredCalculatedProducts.sort(
+					(a, b) => {
+						if (sorting.sortBy === "price") {
+							return sorting.sortDirection === "asc"
+								? a.price - b.price
+								: b.price - a.price;
+						}
+
+						if (sorting.sortBy === "name") {
+							return sorting.sortDirection === "asc"
+								? a.name.localeCompare(b.name)
+								: b.name.localeCompare(a.name);
+						}
+
+						return 0;
+					}
 				);
 
-				setFilteredProducts(filteredCalculatedProducts);
-				setPagination({
-					...pagination,
+				// Actualización de productos filtrados y paginación
+				setFilteredProducts(filteredAndSortedProducts);
+				setPagination((prev) => ({
+					...prev,
 					page: 1,
-					totalPages: Math.ceil(
-						filteredCalculatedProducts.length / pagination.limit
-					),
-					pageItems: filteredCalculatedProducts.slice(0, pagination.limit),
-				});
+					totalPages: Math.ceil(filteredAndSortedProducts.length / prev.limit),
+					pageItems: filteredAndSortedProducts.slice(0, prev.limit),
+				}));
 			}
 		};
 
-		applyFilters();
-	}, [filters]);
-
-	useEffect(() => {
-		const applySorting = () => {
-			if (filteredProducts) {
-				const sortedProducts = filteredProducts.sort((a, b) => {
-					if (sorting.sortBy === "price") {
-						return sorting.sortDirection === "asc"
-							? a.price - b.price
-							: b.price - a.price;
-					}
-
-					if (sorting.sortBy === "name") {
-						return sorting.sortDirection === "asc"
-							? a.name.localeCompare(b.name)
-							: b.name.localeCompare(a.name);
-					}
-
-					return 0;
-				});
-
-				setFilteredProducts(sortedProducts);
-				setPagination({
-					...pagination,
-					page: 1,
-					totalPages: Math.ceil(sortedProducts.length / pagination.limit),
-					pageItems: sortedProducts.slice(0, pagination.limit),
-				});
-			}
-		};
-
-		applySorting();
-	}, [sorting]);
+		applyFiltersAndSorting();
+	}, [filters, sorting, products, pagination.limit]);
 
 	const handlePageChange = (newPage: number) => {
 		if (newPage < 1 || newPage > pagination.totalPages) return;
@@ -243,25 +228,70 @@ export const SearchView = ({
 		router.push(`/search?${newSearchParams.toString()}`);
 	};
 
-	if (!products || !categories) return <div>Cargando...</div>;
+	const cleanFiltersAndSorting = () => {
+		// Limpia los estados de filtros y orden
+		setFilters({
+			name: undefined,
+			category_id: undefined,
+			priceMin: undefined,
+			priceMax: undefined,
+			new: undefined,
+			available: undefined,
+		});
+
+		setSorting({
+			sortBy: undefined,
+			sortDirection: undefined,
+		});
+
+		// Actualiza la URL eliminando todos los parámetros
+		router.push(`/search`);
+	};
+
+	if (!products || !categories)
+		return (
+			<div className="container mx-auto p-4 flex flex-col min-h-withNav justify-center items-center  ">
+				<Loader2 size={50} className="mx-auto animate-spin text-primary" />
+				<span className="text-base text-neutral-500 mt-4">
+					Obteniendo los productos
+				</span>
+			</div>
+		);
 
 	return (
-		<div className="min-h-screen p-3">
-			<div className="flex flex-row  gap-3">
+		<div className="min-h-withNav p-3 flex flex-col justify-between">
+			<div className="relative mb-3">
+				<Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-neutral-400" />
+				<Input
+					onChange={(e) => handleFiltersChange("name", e.target.value)}
+					type="search"
+					placeholder="Buscar productos..."
+					className="w-full pl-10 bg-secondary-light border-accent text-alternative placeholder-neutral-400 focus:border-accent"
+				/>
+			</div>
+
+			<div className="flex flex-row gap-3 mb-3">
 				<FiltersBar
 					filters={filters}
 					handleFiltersChange={handleFiltersChange}
 					categories={categories}
+					cleanFilters={cleanFiltersAndSorting}
 				/>
 				<SortingBar
 					sorting={sorting}
 					handleSortingChange={handleSortingChange}
+					cleanSorting={cleanFiltersAndSorting}
 				/>
 			</div>
+			<h2 className="text-xl font-semibold text-primary/70 mb-3">
+				{filters.name}
+			</h2>
 
-			<ProductsRepeater products={pagination.pageItems} />
+			<div className="mb-8">
+				<ProductsRepeater products={pagination.pageItems} />
+			</div>
 
-			<div className="mt-8">
+			<div className="mt-auto">
 				<PaginationControls
 					pagination={pagination}
 					handlePageChange={handlePageChange}

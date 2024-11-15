@@ -10,7 +10,7 @@ import {
 	SheetTrigger,
 } from "../ui/sheet";
 import { Button } from "../ui/button";
-import { ChevronDown, Filter, SlidersHorizontal } from "lucide-react";
+import { ChevronDown, Filter } from "lucide-react";
 import {
 	Select,
 	SelectContent,
@@ -25,16 +25,18 @@ import { Label } from "../ui/label";
 export const FiltersBar = ({
 	filters,
 	handleFiltersChange,
+	cleanFilters,
 	categories,
 }: {
 	filters: Filters;
-	handleFiltersChange: any;
+	handleFiltersChange: (attribute: string, value: any) => void;
+	cleanFilters: () => void;
 	categories: Category[];
 }) => {
 	const [isFiltersOpen, setIsFiltersOpen] = useState(false);
 
 	return (
-		<div className="flex justify-between items-center mb-4 w-full">
+		<div className="flex justify-between items-center w-full">
 			<Sheet open={isFiltersOpen} onOpenChange={setIsFiltersOpen}>
 				<SheetTrigger asChild>
 					<Button
@@ -160,6 +162,15 @@ export const FiltersBar = ({
 							onClick={() => setIsFiltersOpen(false)}
 						>
 							Aplicar
+						</Button>
+						<Button
+							className="w-full bg-secondary-light hover:bg-secondary/80 text-white"
+							onClick={() => {
+								cleanFilters();
+								setIsFiltersOpen(false);
+							}}
+						>
+							Limpiar
 						</Button>
 					</div>
 				</SheetContent>
