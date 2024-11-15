@@ -29,7 +29,10 @@ export const FiltersBar = ({
 	categories,
 }: {
 	filters: Filters;
-	handleFiltersChange: (attribute: string, value: any) => void;
+	handleFiltersChange: (
+		attribute: string,
+		value: string | boolean | undefined
+	) => void;
 	cleanFilters: () => void;
 	categories: Category[];
 }) => {

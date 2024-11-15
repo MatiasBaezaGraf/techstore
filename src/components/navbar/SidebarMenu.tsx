@@ -1,7 +1,4 @@
 "use client";
-
-import Image from "next/image";
-
 import {
 	ChevronLeft,
 	Laptop,
@@ -29,7 +26,7 @@ export const iconMap = {
 export const SidebarMenu = ({
 	fetchCategories,
 }: {
-	fetchCategories: () => Promise<any[]>;
+	fetchCategories: () => Promise<Category[]>;
 }) => {
 	const [isOpen, setIsOpen] = useState(false);
 	const [categories, setCategories] = useState<Category[]>([]);

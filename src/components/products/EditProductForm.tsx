@@ -34,7 +34,7 @@ export const EditProductForm = ({
 }: {
 	productId: string;
 	getProductToEdit: (id: string) => Promise<Product[]>;
-	editProduct: (product: any, previousImageName: string) => Promise<void>;
+	editProduct: (product: Product, previousImageName: string) => Promise<void>;
 	fetchCategories: () => Promise<Category[]>;
 }) => {
 	const router = useRouter();
@@ -92,26 +92,42 @@ export const EditProductForm = ({
 	) => {
 		const { name, value } = e.target;
 
-		setProduct((prev: any) => ({ ...prev, [name]: value }));
+		setProduct(
+			(prev: {
+				name: string;
+				description: string;
+				price: string;
+				category_id: string;
+				image: File | null;
+				show: boolean;
+				available: boolean;
+				new: boolean;
+				highlighted: boolean;
+			}) => ({ ...prev, [name]: value })
+		);
 	};
 
 	const handleSelectChange = (value: string) => {
 		if (value === "") return;
-		setProduct((prev: any) => ({ ...prev, category_id: value }));
+		setProduct(
+			(prev: {
+				name: string;
+				description: string;
+				price: string;
+				category_id: string;
+				image: File | null;
+				show: boolean;
+				available: boolean;
+				new: boolean;
+				highlighted: boolean;
+			}) => ({ ...prev, category_id: value })
+		);
 	};
 
 	const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		if (e.target.files && e.target.files[0]) {
 			setProduct((prev) => ({ ...prev, image: e.target.files![0] }));
 		}
-	};
-
-	const handleAvailabilityChange = (checked: boolean) => {
-		setProduct((prev: any) => ({ ...prev, available: checked }));
-	};
-
-	const handleVisibilityChange = (checked: boolean) => {
-		setProduct((prev: any) => ({ ...prev, show: checked }));
 	};
 
 	const handleSubmit = async (e: React.FormEvent) => {
@@ -141,6 +157,8 @@ export const EditProductForm = ({
 				duration: 5000,
 				variant: "destructive",
 			});
+
+			console.error(error);
 		} finally {
 			setIsSubmitting(false);
 		}

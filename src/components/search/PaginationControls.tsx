@@ -2,11 +2,7 @@ import { Pagination as PaginationType } from "@/app/types/types";
 import {
 	Pagination,
 	PaginationContent,
-	PaginationEllipsis,
 	PaginationItem,
-	PaginationLink,
-	PaginationNext,
-	PaginationPrevious,
 } from "../ui/pagination";
 import { Button } from "../ui/button";
 import {

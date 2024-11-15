@@ -41,7 +41,7 @@ export default async function DashboardPage() {
 			show: !product.show,
 		};
 
-		const { data, error } = await supabase
+		const { error } = await supabase
 			.from("products")
 			.update(productToUpdate)
 			.eq("id", product.id);
@@ -68,10 +68,8 @@ export default async function DashboardPage() {
 		if (product.imageName) {
 			console.log("Deleting image from storage", product.imageName);
 			// Remove the image from the storage
-			const { data: imageError, error: imageDeleteError } =
-				await supabase.storage
-					.from("productImages")
-					.remove([product.imageName]);
+
+			await supabase.storage.from("productImages").remove([product.imageName]);
 		}
 
 		revalidatePath("/dashboard");

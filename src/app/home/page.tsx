@@ -1,24 +1,8 @@
-import Image from "next/image";
-import Autoplay from "embla-carousel-autoplay";
-
-import {
-	Carousel,
-	CarouselContent,
-	CarouselItem,
-	CarouselNext,
-	CarouselPrevious,
-} from "@/components/ui/carousel";
 import { Input } from "@/components/ui/input";
-import { Instagram, Search } from "lucide-react";
+import { Search } from "lucide-react";
 import { createClient } from "../utils/server";
 import { HighlightedProductsCarousel } from "@/components/home/HighlightedProductsCarousel";
-import Link from "next/link";
 import { CategoriesCarousel } from "@/components/home/CategoriesCarousel";
-
-const categorias = [
-	{ nombre: "Smartphones", imagen: "/smartphones.png" },
-	{ nombre: "Laptops", imagen: "/laptops.png" },
-];
 
 export default function HomePage() {
 	async function fetchHighlightedProducts() {

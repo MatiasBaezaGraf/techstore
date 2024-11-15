@@ -1,4 +1,3 @@
-import Image from "next/image";
 import { SidebarMenu } from "./SidebarMenu";
 import { Logo } from "../general/Logo";
 import { createClient } from "@/app/utils/server";

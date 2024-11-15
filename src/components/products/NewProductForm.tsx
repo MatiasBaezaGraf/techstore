@@ -1,6 +1,6 @@
 "use client";
 
-import { Category, Product } from "@/app/types/types";
+import { Category } from "@/app/types/types";
 
 import {
 	Card,
@@ -31,7 +31,17 @@ export const NewProductForm = ({
 	insertProduct,
 	fetchCategories,
 }: {
-	insertProduct: (product: any) => Promise<void>;
+	insertProduct: (product: {
+		name: string;
+		description: string;
+		price: number;
+		category_id: string;
+		image?: File;
+		show: boolean;
+		available: boolean;
+		new: boolean;
+		highlighted: boolean;
+	}) => Promise<void>;
 	fetchCategories: () => Promise<Category[]>;
 }) => {
 	const router = useRouter();
@@ -44,7 +54,7 @@ export const NewProductForm = ({
 		description: "",
 		price: "",
 		category_id: "",
-		image: null as File | null,
+		image: undefined as File | undefined,
 		show: true,
 		available: true,
 		new: true,
@@ -95,6 +105,8 @@ export const NewProductForm = ({
 				duration: 5000,
 				variant: "destructive",
 			});
+
+			console.error(error);
 		} finally {
 			setIsSubmitting(false);
 		}
@@ -204,7 +216,7 @@ export const NewProductForm = ({
 										<X
 											className="ml-2 h-4 w-4 cursor-pointer"
 											onClick={() =>
-												setProduct((prev) => ({ ...prev, image: null }))
+												setProduct((prev) => ({ ...prev, image: undefined }))
 											}
 										/>
 									</div>

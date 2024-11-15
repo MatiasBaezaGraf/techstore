@@ -39,7 +39,7 @@ export const ProductDashboardCard = ({
 }) => {
 	const cdnUrl = process.env.NEXT_PUBLIC_SUPABASE_CDN_URL;
 
-	const [productShow, setProductShow] = useState<any>(product.show);
+	const [productShow, setProductShow] = useState<boolean>(product.show);
 
 	const handleShowChange = async () => {
 		setProductShow(!productShow);

@@ -2,18 +2,9 @@
 
 import { useEffect, useState } from "react";
 
-import Image from "next/image";
 import Link from "next/link";
 
-import {
-	Edit,
-	Filter,
-	ImageOff,
-	Loader2,
-	Plus,
-	Search,
-	Trash2,
-} from "lucide-react";
+import { Filter, Loader2, Plus, Search } from "lucide-react";
 import { Button } from "../../ui/button";
 import { Input } from "../../ui/input";
 import { Label } from "../../ui/label";
@@ -42,7 +33,7 @@ export const ProductsDashboard = ({
 	updateProductShow,
 	deleteProduct,
 }: {
-	fetchProducts: () => Promise<any[]>;
+	fetchProducts: () => Promise<Product[]>;
 	fetchCategories: () => Promise<Category[]>;
 	updateProductShow: (product: Product) => void;
 	deleteProduct: (product: Product) => void;
@@ -85,10 +76,10 @@ export const ProductsDashboard = ({
 	}, []);
 
 	useEffect(() => {
-		let filteredProducts = fetchedProducts?.filter((product) => {
-			let name = product.name.toLowerCase();
-			let category_id = product.category_id;
-			let visibility = product.show;
+		const filteredProducts = fetchedProducts?.filter((product) => {
+			const name = product.name.toLowerCase();
+			const category_id = product.category_id;
+			const visibility = product.show;
 
 			return (
 				(!filters.name || name.includes(filters.name.toLowerCase())) &&

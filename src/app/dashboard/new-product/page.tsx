@@ -1,7 +1,6 @@
 import { NewProductForm } from "@/components/products/NewProductForm";
 
 import { createClient } from "@/app/utils/server";
-import { redirect } from "next/navigation";
 
 export default function NewProductPage() {
 	async function insertProduct(product: {
@@ -31,7 +30,7 @@ export default function NewProductPage() {
 			highlighted: product.highlighted,
 		};
 
-		const { data: productInserted, error: productError } = await supabase
+		const { error: productError } = await supabase
 			.from("products")
 			.insert([productToInsert]);
 
@@ -40,7 +39,7 @@ export default function NewProductPage() {
 		}
 
 		if (product.image) {
-			const { data: imageInserted, error: imageError } = await supabase.storage
+			const { error: imageError } = await supabase.storage
 				.from("productImages")
 				.upload(product.image.name, product.image);
 

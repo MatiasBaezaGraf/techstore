@@ -44,7 +44,17 @@ export default async function EditProductPage({
 
 		const supabase = await createClient();
 
-		const productToEdit: any = {
+		const productToEdit: {
+			name: string;
+			description: string;
+			price: number;
+			category_id: string;
+			show: boolean;
+			available: boolean;
+			new: boolean;
+			highlighted: boolean;
+			imageName?: string;
+		} = {
 			name: product.name,
 			description: product.description,
 			price: product.price,
@@ -59,7 +69,7 @@ export default async function EditProductPage({
 			productToEdit.imageName = product.image.name;
 		}
 
-		const { data: productEdited, error: productError } = await supabase
+		const { error: productError } = await supabase
 			.from("products")
 			.update(productToEdit)
 			.eq("id", id);
@@ -78,7 +88,7 @@ export default async function EditProductPage({
 				throw deleteError;
 			}
 
-			const { data: imageEdited, error: imageError } = await supabase.storage
+			const { error: imageError } = await supabase.storage
 				.from("productImages")
 				.upload(product.image.name, product.image);
 

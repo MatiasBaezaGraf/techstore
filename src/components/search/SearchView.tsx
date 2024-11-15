@@ -186,7 +186,10 @@ export const SearchView = ({
 		}));
 	};
 
-	const handleFiltersChange = (attribute: string, value: any) => {
+	const handleFiltersChange = (
+		attribute: string,
+		value: string | boolean | undefined
+	) => {
 		setFilters((prev) => ({
 			...prev,
 			[attribute]: value,
@@ -207,7 +210,7 @@ export const SearchView = ({
 		router.push(`/search?${newSearchParams.toString()}`);
 	};
 
-	const handleSortingChange = (attribute: string, value: any) => {
+	const handleSortingChange = (attribute: string, value: string) => {
 		setSorting((prev) => ({
 			...prev,
 			[attribute]: value,
