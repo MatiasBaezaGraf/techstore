@@ -71,9 +71,9 @@ export const SidebarMenu = ({
 					</Button>
 				</div>
 
-				<ScrollArea className="h-full mt-6 rounded-md border border-accent p-2 ">
+				<ScrollArea className="h-full mt-6 rounded-md border border-accent p-4 ">
 					<nav>
-						<ul className="">
+						<ul className="flex flex-col gap-4">
 							{categories.length > 0
 								? categories.map((category, index) => {
 										const IconElement = iconMap[category.icon];
@@ -98,7 +98,7 @@ export const SidebarMenu = ({
 							<li>
 								<Link
 									href={"/search?new=true"}
-									className="w-full justify-start text-base text-alternative bg-secondary-dark hover:bg-secondary"
+									className="w-full justify-start flex flex-row gap-2 text-base text-alternative bg-secondary-dark hover:bg-secondary"
 								>
 									<Tag />
 									Nuevos
@@ -107,7 +107,7 @@ export const SidebarMenu = ({
 							<li>
 								<Link
 									href={"/search?new=false"}
-									className="w-full justify-start text-base text-alternative bg-secondary-dark hover:bg-secondary"
+									className="w-full justify-start flex flex-row gap-2 text-base text-alternative bg-secondary-dark hover:bg-secondary"
 								>
 									<RefreshCcw />
 									Usados
