@@ -11,6 +11,7 @@ import {
 } from "../ui/carousel";
 import { useEffect, useState } from "react";
 import { Loader2 } from "lucide-react";
+import Link from "next/link";
 
 export const CategoriesCarousel = ({
 	fetchCategories,
@@ -54,7 +55,10 @@ export const CategoriesCarousel = ({
 				<CarouselContent>
 					{categories.map((category, index) => (
 						<CarouselItem key={index} className="basis-full">
-							<div className="relative h-52 w-full rounded-lg">
+							<Link
+								href={`/search?category_id=${category.id}`}
+								className="relative h-52 w-full rounded-lg transform duration-200 hover:scale-[1.01] hover:border-primary"
+							>
 								<Image
 									src={cdnUrl + "/categoryImages/" + category.imageName}
 									alt={category.name}
@@ -67,7 +71,7 @@ export const CategoriesCarousel = ({
 										{category.name}
 									</h3>
 								</div>
-							</div>
+							</Link>
 						</CarouselItem>
 					))}
 				</CarouselContent>

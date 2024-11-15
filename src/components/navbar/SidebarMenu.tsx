@@ -15,6 +15,7 @@ import { ScrollArea } from "../ui/scroll-area";
 import { useEffect, useState } from "react";
 import { Logo } from "../general/Logo";
 import { Category } from "@/app/types/types";
+import Link from "next/link";
 
 export const iconMap = {
 	Laptop,
@@ -79,13 +80,13 @@ export const SidebarMenu = ({
 
 										return (
 											<li key={index}>
-												<Button
-													variant="ghost"
-													className="w-full justify-start text-base text-alternative"
+												<Link
+													href={`/search?category_id=${category.id}`}
+													className="w-full justify-start text-base text-alternative bg-secondary-dark hover:bg-secondary"
 												>
 													<IconElement />
 													{category.name}
-												</Button>
+												</Link>
 											</li>
 										);
 								  })
@@ -95,22 +96,22 @@ export const SidebarMenu = ({
 										</li>
 								  ))}
 							<li>
-								<Button
-									variant="ghost"
-									className="w-full justify-start text-base text-alternative"
+								<Link
+									href={"/search?new=true"}
+									className="w-full justify-start text-base text-alternative bg-secondary-dark hover:bg-secondary"
 								>
 									<Tag />
 									Nuevos
-								</Button>
+								</Link>
 							</li>
 							<li>
-								<Button
-									variant="ghost"
-									className="w-full justify-start text-base text-alternative"
+								<Link
+									href={"/search?new=false"}
+									className="w-full justify-start text-base text-alternative bg-secondary-dark hover:bg-secondary"
 								>
 									<RefreshCcw />
 									Usados
-								</Button>
+								</Link>
 							</li>
 						</ul>
 					</nav>
