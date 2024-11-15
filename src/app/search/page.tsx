@@ -1,5 +1,7 @@
 import { SearchView } from "@/components/search/SearchView";
 import { createClient } from "../utils/server";
+import { Suspense } from "react";
+import { Loader2 } from "lucide-react";
 
 export default function SearchPage() {
 	async function fetchProducts() {
@@ -31,9 +33,20 @@ export default function SearchPage() {
 	}
 
 	return (
-		<SearchView
-			fetchProducts={fetchProducts}
-			fetchCategories={fetchCategories}
-		/>
+		<Suspense
+			fallback={
+				<div className="container mx-auto p-4 flex flex-col min-h-withNav justify-center items-center  ">
+					<Loader2 size={50} className="mx-auto animate-spin text-primary" />
+					<span className="text-base text-neutral-500 mt-4">
+						Cargando página
+					</span>
+				</div>
+			}
+		>
+			<SearchView
+				fetchProducts={fetchProducts}
+				fetchCategories={fetchCategories}
+			/>
+		</Suspense>
 	);
 }

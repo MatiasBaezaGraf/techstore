@@ -2,11 +2,9 @@ import { createClient } from "@/app/utils/server";
 import { EditProductForm } from "@/components/products/EditProductForm";
 import { redirect } from "next/navigation";
 
-export default async function EditProductPage({
-	params,
-}: {
-	params: { id: string };
-}) {
+export type Params = Promise<{ id: string }>;
+
+export default async function EditProductPage({ params }: { params: Params }) {
 	const { id } = await params;
 
 	async function getProductToEdit(id: string) {
