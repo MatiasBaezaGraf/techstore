@@ -2,7 +2,6 @@ import { Product } from "@/app/types/types";
 import Image from "next/image";
 import { Card, CardContent } from "../ui/card";
 import { Badge } from "../ui/badge";
-import { Button } from "../ui/button";
 
 export const ProductCard = ({ product }: { product: Product }) => {
 	const cdnUrl = process.env.NEXT_PUBLIC_SUPABASE_CDN_URL;
