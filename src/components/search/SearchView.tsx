@@ -68,17 +68,39 @@ export const SearchView = ({
 			setProducts(data);
 			//Filtrar los productos segun los filtros iniciales
 			const filteredCalculatedProducts = data.filter((product) => {
-				return (
-					(!filters.name ||
-						product.name.toLowerCase().includes(filters.name.toLowerCase())) &&
-					(!filters.category_id ||
-						filters.category_id === "todas" ||
-						parseInt(product.category_id) === parseInt(filters.category_id)) &&
+				const categoryName = categories?.find(
+					(category) => category.id === parseInt(product.category_id)
+				)?.name;
+
+				// Busca en el nombre, la descripción del producto y en el nombre de la categoría
+				const matchesName =
+					!filters.name ||
+					product.name.toLowerCase().includes(filters.name.toLowerCase()) ||
+					product.description
+						.toLowerCase()
+						.includes(filters.name.toLowerCase()) ||
+					categoryName?.toLowerCase().includes(filters.name.toLowerCase()); // Buscar en el nombre de la categoría
+
+				const matchesCategory =
+					!filters.category_id ||
+					product.category_id.toString().includes(filters.category_id);
+
+				const matchesPrice =
 					(!filters.priceMin || product.price >= filters.priceMin) &&
-					(!filters.priceMax || product.price <= filters.priceMax) &&
-					(filters.new === undefined || product.new === filters.new) &&
-					(filters.available === undefined ||
-						product.available === filters.available)
+					(!filters.priceMax || product.price <= filters.priceMax);
+
+				const matchesNew =
+					filters.new === undefined || product.new === filters.new;
+				const matchesAvailable =
+					filters.available === undefined ||
+					product.available === filters.available;
+
+				return (
+					matchesName &&
+					matchesPrice &&
+					matchesNew &&
+					matchesAvailable &&
+					matchesCategory
 				);
 			});
 
@@ -90,10 +112,10 @@ export const SearchView = ({
 							: b.price - a.price;
 					}
 
-					if (sorting.sortBy === "name") {
-						return sorting.sortDirection === "asc"
-							? a.name.localeCompare(b.name)
-							: b.name.localeCompare(a.name);
+					if (sorting.sortBy === "new") {
+						return sorting.sortDirection === "desc"
+							? Number(b.new) - Number(a.new) // Primero los `new: true`
+							: Number(a.new) - Number(b.new); // Primero los `new: false`
 					}
 
 					return 0;
@@ -123,20 +145,39 @@ export const SearchView = ({
 			if (products) {
 				// Filtrado
 				const filteredCalculatedProducts = products.filter((product) => {
-					return (
-						(!filters.name ||
-							product.name
-								.toLowerCase()
-								.includes(filters.name.toLowerCase())) &&
-						(!filters.category_id ||
-							filters.category_id === "todas" ||
-							parseInt(product.category_id) ===
-								parseInt(filters.category_id)) &&
+					const categoryName = categories?.find(
+						(category) => category.id === parseInt(product.category_id)
+					)?.name;
+
+					// Busca en el nombre, la descripción del producto y en el nombre de la categoría
+					const matchesName =
+						!filters.name ||
+						product.name.toLowerCase().includes(filters.name.toLowerCase()) ||
+						product.description
+							.toLowerCase()
+							.includes(filters.name.toLowerCase()) ||
+						categoryName?.toLowerCase().includes(filters.name.toLowerCase()); // Buscar en el nombre de la categoría
+
+					const matchesPrice =
 						(!filters.priceMin || product.price >= filters.priceMin) &&
-						(!filters.priceMax || product.price <= filters.priceMax) &&
-						(filters.new === undefined || product.new === filters.new) &&
-						(filters.available === undefined ||
-							product.available === filters.available)
+						(!filters.priceMax || product.price <= filters.priceMax);
+
+					const matchesCategory =
+						!filters.category_id ||
+						product.category_id.toString().includes(filters.category_id);
+
+					const matchesNew =
+						filters.new === undefined || product.new === filters.new;
+					const matchesAvailable =
+						filters.available === undefined ||
+						product.available === filters.available;
+
+					return (
+						matchesName &&
+						matchesPrice &&
+						matchesNew &&
+						matchesAvailable &&
+						matchesCategory
 					);
 				});
 
@@ -149,10 +190,10 @@ export const SearchView = ({
 								: b.price - a.price;
 						}
 
-						if (sorting.sortBy === "name") {
-							return sorting.sortDirection === "asc"
-								? a.name.localeCompare(b.name)
-								: b.name.localeCompare(a.name);
+						if (sorting.sortBy === "new") {
+							return sorting.sortDirection === "desc"
+								? Number(b.new) - Number(a.new) // Primero los `new: true`
+								: Number(a.new) - Number(b.new); // Primero los `new: false`
 						}
 
 						return 0;
@@ -173,6 +214,40 @@ export const SearchView = ({
 		applyFiltersAndSorting();
 	}, [filters, sorting, products, pagination.limit]);
 
+	useEffect(() => {
+		// Solo los parámetros relevantes para los filtros
+		const updatedFilters: Filters = {
+			name: searchParams.get("name") ?? undefined,
+			category_id: searchParams.get("category_id") ?? undefined,
+			priceMin: searchParams.get("priceMin")
+				? parseInt(searchParams.get("priceMin")!)
+				: undefined,
+			priceMax: searchParams.get("priceMax")
+				? parseInt(searchParams.get("priceMax")!)
+				: undefined,
+			new: searchParams.has("new")
+				? searchParams.get("new") === "true"
+				: undefined,
+			available: searchParams.has("available")
+				? searchParams.get("available") === "true"
+				: undefined,
+		};
+
+		setSorting({
+			sortBy: searchParams.get("sortBy") ?? undefined,
+			sortDirection: searchParams.get("sortDirection") ?? undefined,
+		});
+		// Actualiza únicamente los filtros
+		setFilters(updatedFilters);
+	}, [
+		searchParams.get("name"),
+		searchParams.get("category_id"),
+		searchParams.get("priceMin"),
+		searchParams.get("priceMax"),
+		searchParams.get("new"),
+		searchParams.get("available"),
+	]);
+
 	const handlePageChange = (newPage: number) => {
 		if (newPage < 1 || newPage > pagination.totalPages) return;
 		setPagination((prev) => ({
@@ -186,6 +261,23 @@ export const SearchView = ({
 		}));
 	};
 
+	const updateSearchParams = (updates: Record<string, string | undefined>) => {
+		// Obtiene todos los parámetros actuales
+		const currentParams = new URLSearchParams(searchParams.toString());
+
+		// Aplica las actualizaciones
+		Object.entries(updates).forEach(([key, value]) => {
+			if (value === undefined) {
+				currentParams.delete(key); // Elimina el parámetro si es undefined
+			} else {
+				currentParams.set(key, value);
+			}
+		});
+
+		// Empuja la nueva URL
+		router.push(`/search?${currentParams.toString()}`);
+	};
+
 	const handleFiltersChange = (
 		attribute: string,
 		value: string | boolean | undefined
@@ -195,40 +287,21 @@ export const SearchView = ({
 			[attribute]: value,
 		}));
 
-		//Actualiza la URL con los filtros activos
-		const newSearchParams = new URLSearchParams();
-
-		// Recorre los filtros y añade a la URL solo aquellos que no son undefined
-		const updatedFilters = { ...filters, [attribute]: value };
-		Object.entries(updatedFilters).forEach(([key, val]) => {
-			if (val !== undefined) {
-				newSearchParams.set(key, String(val));
-			}
-		});
-
-		// Empuja la nueva URL
-		router.push(`/search?${newSearchParams.toString()}`);
+		// Actualiza solo los filtros y conserva el sorting
+		updateSearchParams({ [attribute]: value ? String(value) : undefined });
 	};
 
-	const handleSortingChange = (attribute: string, value: string) => {
+	const handleSortingChange = (sorting: {
+		sortBy: string;
+		sortDirection: string;
+	}) => {
 		setSorting((prev) => ({
 			...prev,
-			[attribute]: value,
+			...sorting, // Actualiza ambos valores: sortBy y sortDirection
 		}));
 
-		//Actualiza la URL con los filtros activos
-		const newSearchParams = new URLSearchParams();
-
-		// Recorre los filtros y añade a la URL solo aquellos que no son undefined
-		const updatedSorting = { ...sorting, [attribute]: value };
-		Object.entries(updatedSorting).forEach(([key, val]) => {
-			if (val !== undefined) {
-				newSearchParams.set(key, String(val));
-			}
-		});
-
-		// Empuja la nueva URL
-		router.push(`/search?${newSearchParams.toString()}`);
+		// Actualiza los parámetros de búsqueda con ambos valores
+		updateSearchParams(sorting);
 	};
 
 	const cleanFiltersAndSorting = () => {

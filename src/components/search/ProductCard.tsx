@@ -1,6 +1,7 @@
 import { Product } from "@/app/types/types";
 import Image from "next/image";
 import { Card, CardContent } from "../ui/card";
+import { Badge } from "../ui/badge";
 
 export const ProductCard = ({ product }: { product: Product }) => {
 	const cdnUrl = process.env.NEXT_PUBLIC_SUPABASE_CDN_URL;
@@ -22,9 +23,17 @@ export const ProductCard = ({ product }: { product: Product }) => {
 						/>
 					</div>
 					<div className="flex-1 p-2">
-						<p className="text-primary text-lg font-bold mb-1 ">
-							U$ {product.price}
-						</p>
+						<span className="flex flex-row items-center gap-3 mb-1">
+							<p className="text-primary text-lg font-bold ">
+								U$ {product.price}
+							</p>
+							{product.new && (
+								<Badge className=" bg-accent  text-alternative border-0 h-4">
+									Nuevo
+								</Badge>
+							)}
+						</span>
+
 						<h2 className="text-xs font-regular mb-1 text-alternative/70 line-clamp-2">
 							{product.name}
 						</h2>

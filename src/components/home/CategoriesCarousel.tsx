@@ -74,8 +74,8 @@ export const CategoriesCarousel = ({
 						</CarouselItem>
 					))}
 				</CarouselContent>
-				<CarouselPrevious className="left-2  border-0" />
-				<CarouselNext className="right-2  border-0" />
+				<CarouselPrevious className="left-2  border-0 bg-transparent text-alternative" />
+				<CarouselNext className="right-2  border-0 bg-transparent text-alternative" />
 			</Carousel>
 		</>
 	);

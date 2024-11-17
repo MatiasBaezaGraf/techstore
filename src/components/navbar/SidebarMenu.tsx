@@ -8,6 +8,7 @@ import {
 	Tablet,
 	Tag,
 	RefreshCcw,
+	House,
 } from "lucide-react";
 import { Button } from "../ui/button";
 import { Sheet, SheetContent, SheetTitle, SheetTrigger } from "../ui/sheet";
@@ -74,6 +75,16 @@ export const SidebarMenu = ({
 				<ScrollArea className="h-full mt-6 rounded-md border border-accent p-4 ">
 					<nav>
 						<ul className="flex flex-col gap-4">
+							<li>
+								<Link
+									href={"/home"}
+									onClick={() => setIsOpen(false)}
+									className="w-full justify-start flex flex-row gap-2 p-1 text-base text-alternative bg-secondary-dark hover:bg-secondary"
+								>
+									<House />
+									Home
+								</Link>
+							</li>
 							{categories.length > 0
 								? categories.map((category, index) => {
 										const IconElement = iconMap[category.icon];
@@ -81,8 +92,9 @@ export const SidebarMenu = ({
 										return (
 											<li key={index}>
 												<Link
+													onClick={() => setIsOpen(false)}
 													href={`/search?category_id=${category.id}`}
-													className="w-full flex flex-row gap-2 justify-start text-base text-alternative bg-secondary-dark hover:bg-secondary"
+													className="w-full flex flex-row gap-2 p-1 justify-start text-base text-alternative bg-secondary-dark hover:bg-secondary"
 												>
 													<IconElement />
 													{category.name}
@@ -97,8 +109,9 @@ export const SidebarMenu = ({
 								  ))}
 							<li>
 								<Link
+									onClick={() => setIsOpen(false)}
 									href={"/search?new=true"}
-									className="w-full justify-start flex flex-row gap-2 text-base text-alternative bg-secondary-dark hover:bg-secondary"
+									className="w-full justify-start flex flex-row gap-2 p-1 text-base text-alternative bg-secondary-dark hover:bg-secondary"
 								>
 									<Tag />
 									Nuevos
@@ -106,8 +119,9 @@ export const SidebarMenu = ({
 							</li>
 							<li>
 								<Link
+									onClick={() => setIsOpen(false)}
 									href={"/search?new=false"}
-									className="w-full justify-start flex flex-row gap-2 text-base text-alternative bg-secondary-dark hover:bg-secondary"
+									className="w-full justify-start flex flex-row gap-2 p-1 text-base text-alternative bg-secondary-dark hover:bg-secondary"
 								>
 									<RefreshCcw />
 									Usados

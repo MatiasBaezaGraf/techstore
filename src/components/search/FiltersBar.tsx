@@ -38,6 +38,8 @@ export const FiltersBar = ({
 }) => {
 	const [isFiltersOpen, setIsFiltersOpen] = useState(false);
 
+	const filtersNumber = Object.values(filters).filter((value) => value).length;
+
 	return (
 		<div className="flex justify-between items-center w-full">
 			<Sheet open={isFiltersOpen} onOpenChange={setIsFiltersOpen}>
@@ -45,10 +47,19 @@ export const FiltersBar = ({
 					<Button
 						variant="outline"
 						size="icon"
-						className="w-full bg-secondary text-alternative border-secondary-light"
+						className={`w-full  text-alternative hover:bg-secondary-dark hover:text-alternative  ${
+							filtersNumber > 0
+								? "border-accent bg-accent/10 "
+								: "border-secondary-light bg-secondary"
+						}`}
 					>
-						<span>Filtrar</span>
 						<Filter className="h-4 w-4" />
+						<span>Filtrar</span>
+						{filtersNumber > 0 && (
+							<div className="rounded-full border flex items-center justify-center border-accent aspect-square h-5 w-5">
+								<span className="text-alternative">{filtersNumber}</span>
+							</div>
+						)}
 					</Button>
 				</SheetTrigger>
 				<SheetContent

@@ -25,7 +25,10 @@ export const SortingBar = ({
 	cleanSorting,
 }: {
 	sorting: Sorting;
-	handleSortingChange: (attribute: string, value: string) => void;
+	handleSortingChange: (sorting: {
+		sortBy: string;
+		sortDirection: string;
+	}) => void;
 	cleanSorting: () => void;
 }) => {
 	const [isSortingOpen, setSortingOpen] = useState(false);
@@ -35,12 +38,21 @@ export const SortingBar = ({
 			<Sheet open={isSortingOpen} onOpenChange={setSortingOpen}>
 				<SheetTrigger asChild>
 					<Button
-						className="w-full bg-secondary text-alternative border-secondary-light"
+						className={`w-full  text-alternative hover:bg-secondary-dark hover:text-alternative  ${
+							sorting.sortBy
+								? "border-accent bg-accent/10 "
+								: "border-secondary-light bg-secondary"
+						}`}
 						variant="outline"
 						size="icon"
 					>
-						<span>Ordenar</span>
 						<ArrowDownUp className="h-4 w-4" />
+						<span>Ordenar</span>
+						{sorting.sortBy && (
+							<div className="rounded-full border flex items-center justify-center border-accent aspect-square h-5 w-5">
+								<span className="text-alternative">1</span>
+							</div>
+						)}
 					</Button>
 				</SheetTrigger>
 				<SheetContent
@@ -50,7 +62,7 @@ export const SortingBar = ({
 					<SheetHeader>
 						<Button
 							variant={"ghost"}
-							className="w-full bg-secondary text-alternative  hover:bg-secondary-light hover:text-alternative"
+							className="w-full bg-secondary text-alternative hover:bg-secondary-light hover:text-alternative"
 							onClick={() => setSortingOpen(false)}
 						>
 							<span className="sr-only">Cerrar</span>
@@ -63,40 +75,24 @@ export const SortingBar = ({
 					</SheetHeader>
 					<div className="space-y-6 py-4">
 						<div className="space-y-2">
-							<Label htmlFor="categoria">Categoría</Label>
+							<Label htmlFor="sorting">Ordenar por</Label>
 							<Select
-								value={sorting.sortBy}
-								onValueChange={(value) => handleSortingChange("sortBy", value)}
+								value={`${sorting.sortBy}-${sorting.sortDirection}`}
+								onValueChange={(value) => {
+									const [sortBy, sortDirection] = value.split("-");
+									handleSortingChange({ sortBy, sortDirection });
+								}}
 							>
 								<SelectTrigger
-									id="categoria"
+									id="sorting"
 									className="w-full bg-secondary-light text-white border-gray-600"
 								>
-									<SelectValue placeholder="Ordenar por" />
+									<SelectValue placeholder="Seleccionar orden" />
 								</SelectTrigger>
 								<SelectContent className="bg-secondary-light text-white border-gray-600">
-									<SelectItem value={"name"}>Nombre</SelectItem>
-									<SelectItem value={"price"}>Precio</SelectItem>
-								</SelectContent>
-							</Select>
-						</div>
-						<div className="space-y-2">
-							<Label htmlFor="direccion">Dirección</Label>
-							<Select
-								value={sorting.sortDirection}
-								onValueChange={(value) =>
-									handleSortingChange("sortDirection", value)
-								}
-							>
-								<SelectTrigger
-									id="direccion"
-									className="w-full bg-secondary-light text-white border-gray-600"
-								>
-									<SelectValue placeholder="Dirección" />
-								</SelectTrigger>
-								<SelectContent className="bg-secondary-light text-white border-gray-600">
-									<SelectItem value={"asc"}>Ascendente</SelectItem>
-									<SelectItem value={"desc"}>Descendente</SelectItem>
+									<SelectItem value="price-desc">Mayor precio</SelectItem>
+									<SelectItem value="price-asc">Menor precio</SelectItem>
+									<SelectItem value="new-desc">Mas nuevos</SelectItem>
 								</SelectContent>
 							</Select>
 						</div>
