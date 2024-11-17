@@ -2,6 +2,7 @@ import { Product } from "@/app/types/types";
 import Image from "next/image";
 import { Card, CardContent } from "../ui/card";
 import { Badge } from "../ui/badge";
+import { Button } from "../ui/button";
 
 export const ProductCard = ({ product }: { product: Product }) => {
 	const cdnUrl = process.env.NEXT_PUBLIC_SUPABASE_CDN_URL;
@@ -28,7 +29,7 @@ export const ProductCard = ({ product }: { product: Product }) => {
 								U$ {product.price}
 							</p>
 							{product.new && (
-								<Badge className=" bg-accent  text-alternative border-0 h-4">
+								<Badge className=" bg-accent  text-alternative  border-0 h-4">
 									Nuevo
 								</Badge>
 							)}
@@ -37,12 +38,9 @@ export const ProductCard = ({ product }: { product: Product }) => {
 						<h2 className="text-xs font-regular mb-1 text-alternative/70 line-clamp-2">
 							{product.name}
 						</h2>
-						{/* <p className="text-sm text-gray-400 mb-1">
-							{product.available ? "Disponible" : "No disponible"}
-						</p>
-						<p className="text-sm text-gray-400">
-							{product.new ? "Nuevo" : "Reacondicionado"}
-						</p> */}
+						{/* <Button className="text-accent hover:text-primary">
+							Consultar
+						</Button> */}
 					</div>
 				</div>
 			</CardContent>
