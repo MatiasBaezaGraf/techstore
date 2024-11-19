@@ -364,7 +364,10 @@ export const SearchView = ({
 			</h2>
 
 			<div className="mb-8">
-				<ProductsRepeater products={pagination.pageItems} />
+				<ProductsRepeater
+					products={pagination.pageItems}
+					categories={categories}
+				/>
 			</div>
 
 			<div className="mt-auto">

@@ -9,6 +9,7 @@ export type Product = {
 	available: boolean;
 	new: boolean;
 	highlighted: boolean;
+	slug: string;
 };
 
 export type Filters = {

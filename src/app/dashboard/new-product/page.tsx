@@ -28,6 +28,10 @@ export default function NewProductPage() {
 			available: product.available,
 			new: product.new,
 			highlighted: product.highlighted,
+			slug:
+				product.name.replace(/ /g, "_").toLowerCase() +
+				"_" +
+				Math.random().toString(36).substring(7),
 		};
 
 		const { error: productError } = await supabase

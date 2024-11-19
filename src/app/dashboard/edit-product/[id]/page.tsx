@@ -52,6 +52,7 @@ export default async function EditProductPage({ params }: { params: Params }) {
 			new: boolean;
 			highlighted: boolean;
 			imageName?: string;
+			slug: string;
 		} = {
 			name: product.name,
 			description: product.description,
@@ -61,6 +62,10 @@ export default async function EditProductPage({ params }: { params: Params }) {
 			available: product.available,
 			new: product.new,
 			highlighted: product.highlighted,
+			slug:
+				product.name.replace(/ /g, "_").toLowerCase() +
+				"_" +
+				Math.random().toString(36).substring(7),
 		};
 
 		if (product.image) {

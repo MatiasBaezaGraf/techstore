@@ -47,6 +47,7 @@ export const EditProductForm = ({
 		description: "",
 		price: "",
 		category_id: "",
+		slug: "",
 		image: null as File | null,
 		show: true,
 		available: true,
@@ -70,6 +71,7 @@ export const EditProductForm = ({
 				category_id: productToEdit[0].category_id.toString(),
 				image: null,
 				show: productToEdit[0].show,
+				slug: productToEdit[0].slug,
 				available: productToEdit[0].available,
 				new: productToEdit[0].new,
 				highlighted: productToEdit[0].highlighted,
@@ -99,6 +101,7 @@ export const EditProductForm = ({
 				price: string;
 				category_id: string;
 				image: File | null;
+				slug: string;
 				show: boolean;
 				available: boolean;
 				new: boolean;
@@ -116,6 +119,7 @@ export const EditProductForm = ({
 				price: string;
 				category_id: string;
 				image: File | null;
+				slug: string;
 				show: boolean;
 				available: boolean;
 				new: boolean;

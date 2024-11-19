@@ -1,8 +1,18 @@
-import { Product } from "@/app/types/types";
+import { Category, Product } from "@/app/types/types";
 import { ProductCard } from "./ProductCard";
 import { SearchX } from "lucide-react";
 
-export const ProductsRepeater = ({ products }: { products: Product[] }) => {
+export const ProductsRepeater = ({
+	products,
+	categories,
+}: {
+	products: Product[];
+	categories: Category[];
+}) => {
+	const getProductCategory = (categoryId: string) => {
+		return categories.find((category) => category.id === parseInt(categoryId))!;
+	};
+
 	if (products.length === 0) {
 		return (
 			<div className="h-[50vh] flex flex-col gap-5 items-center justify-center	">
@@ -17,7 +27,11 @@ export const ProductsRepeater = ({ products }: { products: Product[] }) => {
 	return (
 		<div className="grid grid-cols-2 lg:grid-cols-3 gap-3">
 			{products.map((product) => (
-				<ProductCard key={product.id} product={product} />
+				<ProductCard
+					key={product.id}
+					product={product}
+					category={getProductCategory(product.category_id)}
+				/>
 			))}
 		</div>
 	);
