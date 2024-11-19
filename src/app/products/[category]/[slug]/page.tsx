@@ -15,7 +15,8 @@ export default async function ProductPage({ params }: { params: Params }) {
 		const { data, error } = await supabase
 			.from("products")
 			.select("*")
-			.eq("slug", slug);
+			.eq("slug", slug)
+			.eq("show", true);
 
 		if (error) {
 			redirect("/search");

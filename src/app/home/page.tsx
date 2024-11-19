@@ -1,8 +1,7 @@
-import { Input } from "@/components/ui/input";
-import { Search } from "lucide-react";
 import { createClient } from "../utils/server";
 import { HighlightedProductsCarousel } from "@/components/home/HighlightedProductsCarousel";
 import { CategoriesCarousel } from "@/components/home/CategoriesCarousel";
+import { SearchInputForm } from "@/components/general/SearchInputForm";
 
 export default function HomePage() {
 	async function fetchHighlightedProducts() {
@@ -39,14 +38,7 @@ export default function HomePage() {
 	return (
 		<div className="min-h-screen flex flex-col gap-3 ">
 			<div className="py-4 px-4">
-				<div className="relative">
-					<Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-neutral-400" />
-					<Input
-						type="search"
-						placeholder="Buscar productos..."
-						className="w-full pl-10 bg-secondary-light border-accent text-alternative placeholder-neutral-400 focus:border-accent"
-					/>
-				</div>
+				<SearchInputForm />
 			</div>
 
 			{/* Carrusel de categorías */}

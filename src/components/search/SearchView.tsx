@@ -282,13 +282,36 @@ export const SearchView = ({
 		attribute: string,
 		value: string | boolean | undefined
 	) => {
-		setFilters((prev) => ({
-			...prev,
-			[attribute]: value,
-		}));
+		if (attribute === "name") {
+			// Si el filtro es `name`, resetea los demás filtros
+			setFilters({
+				name: value ? String(value) : undefined,
+				category_id: undefined,
+				priceMin: undefined,
+				priceMax: undefined,
+				new: undefined,
+				available: undefined,
+			});
 
-		// Actualiza solo los filtros y conserva el sorting
-		updateSearchParams({ [attribute]: value ? String(value) : undefined });
+			// Actualiza los parámetros en la URL para reflejar el cambio
+			updateSearchParams({
+				name: value ? String(value) : undefined,
+				category_id: undefined,
+				priceMin: undefined,
+				priceMax: undefined,
+				new: undefined,
+				available: undefined,
+			});
+		} else {
+			// Si no es el filtro `name`, actualiza normalmente
+			setFilters((prev) => ({
+				...prev,
+				[attribute]: value,
+			}));
+
+			// Actualiza solo el filtro correspondiente en la URL
+			updateSearchParams({ [attribute]: value ? String(value) : undefined });
+		}
 	};
 
 	const handleSortingChange = (sorting: {

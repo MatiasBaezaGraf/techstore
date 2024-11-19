@@ -15,6 +15,7 @@ import {
 import { Badge } from "../ui/badge";
 import { Button } from "../ui/button";
 import Link from "next/link";
+import { SearchInputForm } from "../general/SearchInputForm";
 
 export const ProductView = ({
 	productSlug,
@@ -47,14 +48,8 @@ export const ProductView = ({
 
 	return (
 		<div className="container min-h-withNav mx-auto px-4 py-8">
-			<div className="relative mb-8">
-				<Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-neutral-400" />
-				<Input
-					// onChange={(e) => handleFiltersChange("name", e.target.value)}
-					type="search"
-					placeholder="Buscar productos..."
-					className="w-full pl-10 bg-secondary-light border-accent text-alternative placeholder-neutral-400 focus:border-accent"
-				/>
+			<div className="mb-8">
+				<SearchInputForm />
 			</div>
 			<div className="space-y-6 sm:space-y-8">
 				<Carousel className="w-full max-w-md mx-auto">

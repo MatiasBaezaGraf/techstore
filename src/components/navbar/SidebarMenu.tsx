@@ -82,7 +82,7 @@ export const SidebarMenu = ({
 									className="w-full justify-start flex flex-row gap-2 p-1 text-base text-alternative bg-secondary-dark hover:bg-secondary"
 								>
 									<House />
-									Home
+									Inicio
 								</Link>
 							</li>
 							{categories.length > 0

@@ -9,7 +9,10 @@ export default function SearchPage() {
 
 		const supabase = await createClient();
 
-		const { data, error } = await supabase.from("products").select("*");
+		const { data, error } = await supabase
+			.from("products")
+			.select("*")
+			.eq("show", true);
 
 		if (error) {
 			throw error;
