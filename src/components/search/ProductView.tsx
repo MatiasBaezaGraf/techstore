@@ -1,9 +1,8 @@
 "use client";
 
 import { Category, Product } from "@/app/types/types";
-import { Loader2, MessageCircle, Search } from "lucide-react";
+import { Loader2, MessageCircle } from "lucide-react";
 import { useEffect, useState } from "react";
-import { Input } from "../ui/input";
 import Image from "next/image";
 import {
 	Carousel,
