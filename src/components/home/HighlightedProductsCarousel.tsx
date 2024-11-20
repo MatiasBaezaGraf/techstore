@@ -7,24 +7,39 @@ import {
 } from "@/components/ui/carousel";
 
 import { useEffect, useState } from "react";
-import { Product } from "@/app/types/types";
+import { Category, Product } from "@/app/types/types";
 import { HighlightedProductCard } from "./HighlightedProductCard";
 import { Loader2 } from "lucide-react";
 
 export const HighlightedProductsCarousel = ({
+	fetchCategories,
 	fetchHighlightedProducts,
 }: {
+	fetchCategories: () => Promise<Category[]>;
 	fetchHighlightedProducts: () => Promise<Product[]>;
 }) => {
 	const [products, setProducts] = useState<Product[]>([]);
+	const [categories, setCategories] = useState<Category[]>([]);
 
 	useEffect(() => {
 		fetchHighlightedProducts().then((data) => {
 			setProducts(data);
 		});
+
+		fetchCategories().then((data) => {
+			setCategories(data);
+		});
 	}, []);
 
-	if (products.length === 0) {
+	const getProductCategory = (product: Product) => {
+		const category = categories.find(
+			(category) => category.id === parseInt(product.category_id)
+		)!;
+
+		return category;
+	};
+
+	if (products.length === 0 || categories.length === 0) {
 		return (
 			<div className="mt-4">
 				<h2 className="text-xl font-bold  mb-2 text-alternative">
@@ -51,7 +66,10 @@ export const HighlightedProductsCarousel = ({
 				<CarouselContent>
 					{products.map((product, index) => (
 						<CarouselItem key={index} className="basis-1/2">
-							<HighlightedProductCard product={product} />
+							<HighlightedProductCard
+								product={product}
+								category={getProductCategory(product)}
+							/>
 						</CarouselItem>
 					))}
 				</CarouselContent>

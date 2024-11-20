@@ -50,6 +50,7 @@ export default function HomePage() {
 			<div className="px-4">
 				<HighlightedProductsCarousel
 					fetchHighlightedProducts={fetchHighlightedProducts}
+					fetchCategories={fetchCategories}
 				/>
 			</div>
 		</div>

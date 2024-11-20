@@ -26,8 +26,7 @@ export const ProductCard = ({
 								src={`${cdnUrl}/productImages/${product.imageName}`}
 								alt={product.name}
 								layout="fill"
-								objectFit="cover"
-								className="rounded-t-md hover:scale-105 transform duration-200"
+								className="rounded-t-md hover:scale-105 transform duration-200 object-cover"
 							/>
 						</div>
 					</Link>
