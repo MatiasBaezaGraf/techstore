@@ -2,9 +2,11 @@ import Image from "next/image";
 
 import { Category, Product } from "@/app/types/types";
 
-import { Card, CardContent, CardFooter } from "../ui/card";
+import { Card, CardContent } from "../ui/card";
 import { Badge } from "../ui/badge";
 import Link from "next/link";
+import { Button } from "../ui/button";
+import { MessageCircle } from "lucide-react";
 
 export const HighlightedProductCard = ({
 	product,
@@ -14,12 +16,22 @@ export const HighlightedProductCard = ({
 	category: Category;
 }) => {
 	const cdnUrl = process.env.NEXT_PUBLIC_SUPABASE_CDN_URL;
+	const whatsappNumber = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER;
+	const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
+
+	// Construir el mensaje de WhatsApp
+	const generateWhatsAppLink = () => {
+		const message = `Hola, estoy interesado en el producto "${product.name}". Puedes encontrarlo aquí: ${baseUrl}/products/${category.name}/${product.slug}`;
+		return `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(
+			message
+		)}`;
+	};
 
 	return (
-		<Card className="w-full max-w-sm min-h-full flex flex-col justify-between bg-secondary-light border border-neutral-500 overflow-hidden">
-			<div className="flex flex-col justify-start">
+		<Card className="w-full max-w-sm min-h-full flex flex-col justify-between bg-secondary-light border border-neutral-500 overflow-hidden h-[305px]">
+			<div className="flex flex-col justify-start h-full">
 				<Link href={`/products/${category.name}/${product.slug}`} passHref>
-					<div className="relative aspect-square">
+					<div className="relative  h-[170px]">
 						<Image
 							src={`${cdnUrl}/productImages/${product.imageName}`}
 							alt={product.name}
@@ -28,21 +40,43 @@ export const HighlightedProductCard = ({
 						/>
 					</div>
 				</Link>
-				<CardContent className="p-3 flex flex-col items-start justify-center">
-					<h3 className="text-2xl font-bold text-accent">${product.price}</h3>
-					<h3 className="text-sm font- text-alternative  line-clamp-2 mb-2">
+				<CardContent className="p-2 flex flex-col items-start justify-start flex-1 h-full">
+					<div className="flex items-center gap-2 mb-1 justify-between w-full">
+						<h3 className="text-xl font-bold text-accent">
+							U$ {product.price}
+						</h3>
+						<Badge
+							className="w-min px-2"
+							variant={product.new ? "accent" : "default"}
+						>
+							{product.new ? "Nuevo" : "Renovado"}
+						</Badge>
+					</div>
+					<p className="text-xs text-alternative/50">{category.name}</p>
+					<h3 className="text-sm  text-alternative  line-clamp-1 mb-2">
 						{product.name}
 					</h3>
-					<Badge className="w-min" variant={product.new ? "accent" : "default"}>
-						{product.new ? "Nuevo" : "Reacondicionado"}
-					</Badge>
+
+					<Link
+						className="mt-auto w-full "
+						href={generateWhatsAppLink()}
+						target="_blank"
+					>
+						<Button
+							className="w-full sm:w-auto text-sm border-accent bg-accent/30 hover:bg-accent/40  hover:border"
+							size={"sm"}
+						>
+							<MessageCircle className="mr-1" />
+							Consultar
+						</Button>
+					</Link>
 				</CardContent>
 			</div>
-			{product.available && (
+			{/* {product.available && (
 				<CardFooter className="bg-accent p-2 flex items-center text-xs font-semibold justify-center pt-2">
 					Disponibilidad inmediata
 				</CardFooter>
-			)}
+			)} */}
 		</Card>
 	);
 };

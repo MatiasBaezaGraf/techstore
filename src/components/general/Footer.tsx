@@ -18,7 +18,7 @@ export const Footer = () => {
 					</div>
 					<div className="flex space-x-6">
 						<Link
-							href="https://instagram.com"
+							href="https://www.instagram.com/techstore.lsm?igsh=eTRxYXp6cmF0d3Rx"
 							target="_blank"
 							aria-label="Síguenos en Instagram"
 						>

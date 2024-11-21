@@ -13,13 +13,18 @@ export const SearchInputForm = () => {
 	const handleSearch = (e: React.FormEvent) => {
 		e.preventDefault();
 
-		//Redirect to /search with name=inputvalue
+		// Redirect to /search with name=inputvalue
 		router.push(`/search?name=${inputValue}`);
 	};
 
 	return (
 		<form className="relative" onSubmit={handleSearch}>
-			<Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-neutral-400" />
+			<button
+				type="submit"
+				className="absolute left-3 top-1/2 transform -translate-y-1/2 text-neutral-400 hover:text-alternative"
+			>
+				<Search />
+			</button>
 			<Input
 				value={inputValue}
 				onChange={(e) => setInputValue(e.target.value)}

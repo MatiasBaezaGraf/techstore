@@ -45,9 +45,25 @@ export const HighlightedProductsCarousel = ({
 				<h2 className="text-xl font-bold  mb-2 text-alternative">
 					Productos destacados
 				</h2>
-				<div className="container mx-auto p-4 flex flex-col h-[250px] bg-secondary-light rounded-lg justify-center items-center  ">
-					<Loader2 size={50} className="mx-auto animate-spin text-accent" />
-				</div>
+				<Carousel
+					opts={{
+						loop: true,
+					}}
+					className="w-full"
+				>
+					<CarouselContent>
+						{[1, 2, 3].map((_, index) => (
+							<CarouselItem key={index} className="basis-1/2">
+								<div className="container mx-auto p-4 flex flex-col h-[300px] bg-secondary-light rounded-lg justify-center items-center  animate-pulse">
+									<Loader2
+										size={50}
+										className="mx-auto animate-spin text-accent"
+									/>
+								</div>
+							</CarouselItem>
+						))}
+					</CarouselContent>
+				</Carousel>
 			</div>
 		);
 	}

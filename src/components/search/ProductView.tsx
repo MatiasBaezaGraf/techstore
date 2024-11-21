@@ -26,9 +26,23 @@ export const ProductView = ({
 	getCategory: () => Promise<Category>;
 }) => {
 	const cdnUrl = process.env.NEXT_PUBLIC_SUPABASE_CDN_URL;
+	const whatsappNumber = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER;
+	const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
 
 	const [product, setProduct] = useState<Product | null>(null);
 	const [category, setCategory] = useState<Category | null>(null);
+
+	// Construir el mensaje de WhatsApp
+	const generateWhatsAppLink = () => {
+		const message = `Hola, estoy interesado en el producto "${
+			product!.name
+		}". Puedes encontrarlo aquí: ${baseUrl}/products/${category!.name}/${
+			product!.slug
+		}`;
+		return `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(
+			message
+		)}`;
+	};
 
 	useEffect(() => {
 		getProduct(productSlug).then((data) => setProduct(data));
@@ -37,11 +51,14 @@ export const ProductView = ({
 
 	if (!product || !category)
 		return (
-			<div className="container mx-auto p-4 flex flex-col min-h-withNav justify-center items-center  ">
-				<Loader2 size={50} className="mx-auto animate-spin text-primary" />
-				<span className="text-base text-neutral-500 mt-4">
-					Obteniendo el producto
-				</span>
+			<div className="container mx-auto p-4 flex flex-col gap-3 py-8 min-h-withNav justify-start items-start  ">
+				<div className="bg-secondary-light w-full mb-3 h-10 animate-pulse rounded"></div>
+				<div className="bg-secondary-light w-full mb-3 aspect-square animate-pulse rounded"></div>
+				<div className="bg-secondary-light w-1/3 h-4 animate-pulse rounded"></div>
+				<div className="bg-secondary-light w-2/3 h-6 animate-pulse rounded"></div>
+				<div className="bg-secondary-light w-1/5 h-6 animate-pulse rounded"></div>
+				<div className="bg-secondary-light w-1/2 h-6 animate-pulse rounded mb-3"></div>
+				<div className="bg-secondary-light w-full h-10 animate-pulse rounded"></div>
 			</div>
 		);
 
@@ -102,10 +119,16 @@ export const ProductView = ({
 					<p className="text-alternative/80 text-sm sm:text-base mb-8">
 						{product.description}
 					</p>
-					<Button className="w-full sm:w-auto text-base border-accent border">
-						<MessageCircle className="mr-1" />
-						Consultar por este producto
-					</Button>
+					<Link
+						className="mt-auto"
+						href={generateWhatsAppLink()}
+						target="_blank"
+					>
+						<Button className="w-full sm:w-auto text-base border-accent border">
+							<MessageCircle className="mr-1" />
+							Consultar por este producto
+						</Button>
+					</Link>
 				</div>
 			</div>
 		</div>

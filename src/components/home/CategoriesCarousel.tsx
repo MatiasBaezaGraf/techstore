@@ -36,7 +36,7 @@ export const CategoriesCarousel = ({
 		return (
 			<div className="mt-4">
 				<h2 className="text-xl font-bold  mb-2 text-alternative">Categorías</h2>
-				<div className="container mx-auto p-4 flex flex-col h-[200px] bg-secondary-light rounded-lg justify-center items-center  ">
+				<div className="container mx-auto p-4 flex flex-col h-[200px] bg-secondary-light rounded-lg justify-center items-center  animate-pulse">
 					<Loader2 size={50} className="mx-auto animate-spin text-accent" />
 				</div>
 			</div>

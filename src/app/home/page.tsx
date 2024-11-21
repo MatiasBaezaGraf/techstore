@@ -37,17 +37,17 @@ export default function HomePage() {
 
 	return (
 		<div className="min-h-screen flex flex-col gap-3 ">
-			<div className="py-4 px-4">
+			<div className="py-4 px-3">
 				<SearchInputForm />
 			</div>
 
 			{/* Carrusel de categorías */}
-			<div className="mt-4 px-4">
+			<div className="mt-4 px-3">
 				<CategoriesCarousel fetchCategories={fetchCategories} />
 			</div>
 
 			{/* Carrusel de productos destacados */}
-			<div className="px-4">
+			<div className="px-3">
 				<HighlightedProductsCarousel
 					fetchHighlightedProducts={fetchHighlightedProducts}
 					fetchCategories={fetchCategories}
