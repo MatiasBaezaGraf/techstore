@@ -1,10 +1,16 @@
 "use client";
 
 import { useEffect, useState } from "react";
-
 import Link from "next/link";
-
-import { Filter, Loader2, Plus, Search } from "lucide-react";
+import {
+	ChevronLeft,
+	ChevronRight,
+	Filter,
+	Loader2,
+	Plus,
+	Search,
+	XIcon,
+} from "lucide-react";
 import { Button } from "../../ui/button";
 import { Input } from "../../ui/input";
 import { Label } from "../../ui/label";
@@ -25,7 +31,12 @@ import {
 	SelectValue,
 } from "../../ui/select";
 import { Category, Filters, Product } from "@/app/types/types";
-import { ProductDashboardCard } from "./ProductDashboardCard";
+import { ProductsTable } from "./ProductsTable";
+import {
+	Pagination,
+	PaginationContent,
+	PaginationItem,
+} from "@/components/ui/pagination";
 
 export const ProductsDashboard = ({
 	fetchProducts,
@@ -38,36 +49,71 @@ export const ProductsDashboard = ({
 	updateProductShow: (product: Product) => void;
 	deleteProduct: (product: Product) => void;
 }) => {
-	const [products, setProducts] = useState<Product[] | null>(null);
-	const [categories, setCategories] = useState<Category[]>([]);
 	const [fetchedProducts, setFetchedProducts] = useState<Product[] | null>(
 		null
 	);
-
+	const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
+	const [categories, setCategories] = useState<Category[]>([]);
 	const [filters, setFilters] = useState<Filters>({
 		name: "",
 		category_id: "",
 		visibility: null,
 	});
 
+	// Paginación
+	const [currentPage, setCurrentPage] = useState(1);
+	const productsPerPage = 10;
+
+	// Aplicar filtros
+	const applyFilters = () => {
+		const filtered = fetchedProducts?.filter((product) => {
+			const name = product.name.toLowerCase();
+			const category_id = product.category_id.toString();
+			const visibility = product.show;
+
+			return (
+				(!filters.name || name.includes(filters.name.toLowerCase())) &&
+				(!filters.category_id || category_id === filters.category_id) &&
+				(filters.visibility === null || visibility === filters.visibility)
+			);
+		});
+		setFilteredProducts(filtered || []);
+		setCurrentPage(1); // Reiniciar a la página 1 al aplicar filtros
+	};
+
+	// Obtener productos paginados
+	const getPaginatedProducts = () => {
+		const startIndex = (currentPage - 1) * productsPerPage;
+		return filteredProducts.slice(startIndex, startIndex + productsPerPage);
+	};
+
+	// Manejo de eliminación de producto
 	const onDeleteProduct = async (product: Product) => {
 		await deleteProduct(product);
-		setProducts(
-			(prevProducts) => prevProducts?.filter((p) => p.id !== product.id) || null
+		setFetchedProducts(
+			(prev) => prev?.filter((p) => p.id !== product.id) || null
 		);
 	};
 
+	const getVisibleRange = () => {
+		const start = (currentPage - 1) * productsPerPage + 1;
+		const end = Math.min(
+			currentPage * productsPerPage,
+			filteredProducts.length
+		);
+		return `${start}-${end}`;
+	};
+
+	// Cargar productos y categorías al inicio
 	useEffect(() => {
 		const getAndSetProducts = async () => {
 			const products = await fetchProducts();
-
 			setFetchedProducts(products);
-			setProducts(products);
+			setFilteredProducts(products);
 		};
 
 		const getAndSetCategories = async () => {
 			const categories = await fetchCategories();
-
 			setCategories(categories);
 		};
 
@@ -75,34 +121,20 @@ export const ProductsDashboard = ({
 		getAndSetCategories();
 	}, []);
 
+	// Reaplicar filtros cuando cambien
 	useEffect(() => {
-		const filteredProducts = fetchedProducts?.filter((product) => {
-			const name = product.name.toLowerCase();
-			const category_id = product.category_id;
-			const visibility = product.show;
+		applyFilters();
+	}, [filters, fetchedProducts]);
 
-			return (
-				(!filters.name || name.includes(filters.name.toLowerCase())) &&
-				(!filters.category_id || category_id === filters.category_id) &&
-				(filters.visibility === undefined || visibility === filters.visibility)
-			);
-		});
-
-		setProducts(filteredProducts || []);
-	}, [filters]);
-
-	if (!products)
+	if (!fetchedProducts)
 		return (
-			<div className="container mx-auto p-4 flex flex-col h-screen justify-center items-center  ">
+			<div className="container mx-auto p-4 flex flex-col h-screen justify-center items-center">
 				<Loader2 size={50} className="mx-auto animate-spin" />
 				<span className="text-base text-neutral-500 mt-4">
 					Obteniendo los productos
 				</span>
 			</div>
 		);
-
-	console.log(categories);
-	console.log(products);
 
 	return (
 		<div className="container mx-auto p-4">
@@ -130,12 +162,39 @@ export const ProductsDashboard = ({
 			</div>
 
 			<Sheet>
-				<SheetTrigger asChild>
-					<Button variant="outline" size="sm" className="mb-4">
-						<Filter className="mr-2 h-4 w-4" /> Filtros
-					</Button>
-				</SheetTrigger>
-				<SheetContent side="bottom" className="h-[80vh]">
+				<div
+					className={`flex items-center mb-4 w-fit border rounded-md ${
+						filters.category_id || filters.visibility || filters.name
+							? "border-secondary"
+							: ""
+					}`}
+				>
+					<SheetTrigger asChild>
+						<Button
+							variant="ghost"
+							size="sm"
+							className={`h-10 ${
+								filters.category_id || filters.visibility || filters.name
+									? "rounded-r-none"
+									: ""
+							}`}
+						>
+							<Filter className="mr-2 h-4 w-4" /> Filtros
+						</Button>
+					</SheetTrigger>
+					{(filters.category_id || filters.visibility || filters.name) && (
+						<Button
+							variant="ghost"
+							onClick={() =>
+								setFilters({ name: "", category_id: "", visibility: null })
+							}
+							className="h-10 rounded-l-none"
+						>
+							<XIcon size={5} />
+						</Button>
+					)}
+				</div>
+				<SheetContent side="left" className="min-h-screen">
 					<SheetHeader>
 						<SheetTitle>Filtros</SheetTitle>
 						<SheetDescription>
@@ -149,12 +208,12 @@ export const ProductsDashboard = ({
 								value={
 									filters.category_id === "" ? "todas" : filters.category_id
 								}
-								onValueChange={(value) => {
+								onValueChange={(value) =>
 									setFilters((prev) => ({
 										...prev,
 										category_id: value === "todas" ? "" : value,
-									}));
-								}}
+									}))
+								}
 							>
 								<SelectTrigger id="categoria">
 									<SelectValue placeholder="Selecciona una categoría" />
@@ -183,15 +242,12 @@ export const ProductsDashboard = ({
 										? "visible"
 										: "oculto"
 								}
-								onValueChange={(value) => {
-									if (value === "todos")
-										setFilters((prev) => ({ ...prev, visibility: null }));
-									else
-										setFilters((prev) => ({
-											...prev,
-											visibility: value === "visible",
-										}));
-								}}
+								onValueChange={(value) =>
+									setFilters((prev) => ({
+										...prev,
+										visibility: value === "todos" ? null : value === "visible",
+									}))
+								}
 							>
 								<SelectTrigger id="visibilidad">
 									<SelectValue placeholder="Selecciona visibilidad" />
@@ -207,26 +263,92 @@ export const ProductsDashboard = ({
 					<SheetClose asChild>
 						<Button className="w-full mt-4">Aplicar Filtros</Button>
 					</SheetClose>
+					<SheetClose asChild>
+						<Button
+							onClick={() =>
+								setFilters({ name: "", category_id: "", visibility: null })
+							}
+							variant="outline"
+							className="w-full mt-2"
+						>
+							Limpiar Filtros
+						</Button>
+					</SheetClose>
 				</SheetContent>
-
-				<div className="space-y-4">
-					{categories.length > 0 &&
-						products.map((product) => (
-							<ProductDashboardCard
-								key={product.id}
-								product={product}
-								category={
-									categories.find(
-										(category) =>
-											category.id.toString() === product.category_id.toString()
-									)!
-								}
-								updateProductShow={updateProductShow}
-								deleteProduct={onDeleteProduct}
-							/>
-						))}
-				</div>
 			</Sheet>
+
+			<div className="flex flex-col border items-end rounded-md">
+				<Pagination className="w-fit mx-0">
+					<PaginationContent className="text-sm">
+						<span className="text-secondary/70">
+							{getVisibleRange()} de {filteredProducts.length}
+						</span>
+						<PaginationItem>
+							<Button
+								variant="ghost"
+								size="sm"
+								disabled={currentPage === 1}
+								onClick={() => setCurrentPage((prev) => prev - 1)}
+							>
+								<ChevronLeft className="h-4 w-4" />
+							</Button>
+						</PaginationItem>
+						{/* MOSTRAR LA CANTIDAD DE PRODUCTOS */}
+						<PaginationItem>
+							<Button
+								variant="ghost"
+								size="sm"
+								disabled={
+									currentPage ===
+									Math.ceil(filteredProducts.length / productsPerPage)
+								}
+								onClick={() => setCurrentPage((prev) => prev + 1)}
+							>
+								<ChevronRight className="h-4 w-4" />
+							</Button>
+						</PaginationItem>
+					</PaginationContent>
+				</Pagination>
+
+				<ProductsTable
+					products={getPaginatedProducts()}
+					categories={categories}
+					updateProductShow={updateProductShow}
+					deleteProduct={onDeleteProduct}
+				/>
+
+				<Pagination className="w-fit mx-0">
+					<PaginationContent className="text-sm">
+						<span className="text-secondary/70">
+							{getVisibleRange()} de {filteredProducts.length}
+						</span>
+						<PaginationItem>
+							<Button
+								variant="ghost"
+								size="sm"
+								disabled={currentPage === 1}
+								onClick={() => setCurrentPage((prev) => prev - 1)}
+							>
+								<ChevronLeft className="h-4 w-4" />
+							</Button>
+						</PaginationItem>
+						{/* MOSTRAR LA CANTIDAD DE PRODUCTOS */}
+						<PaginationItem>
+							<Button
+								variant="ghost"
+								size="sm"
+								disabled={
+									currentPage ===
+									Math.ceil(filteredProducts.length / productsPerPage)
+								}
+								onClick={() => setCurrentPage((prev) => prev + 1)}
+							>
+								<ChevronRight className="h-4 w-4" />
+							</Button>
+						</PaginationItem>
+					</PaginationContent>
+				</Pagination>
+			</div>
 		</div>
 	);
 };

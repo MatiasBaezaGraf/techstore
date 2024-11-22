@@ -1,7 +1,6 @@
 import { SearchView } from "@/components/search/SearchView";
 import { createClient } from "../utils/server";
 import { Suspense } from "react";
-import { Loader2 } from "lucide-react";
 
 export default function SearchPage() {
 	async function fetchProducts() {

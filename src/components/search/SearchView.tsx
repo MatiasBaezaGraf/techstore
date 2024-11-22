@@ -13,7 +13,7 @@ import { PaginationControls } from "./PaginationControls";
 import { ProductsRepeater } from "./ProductsRepeater";
 import { FiltersBar } from "./FiltersBar";
 import { SortingBar } from "./SortingBar";
-import { Loader2, Search } from "lucide-react";
+import { Search } from "lucide-react";
 import { Input } from "../ui/input";
 
 export const SearchView = ({

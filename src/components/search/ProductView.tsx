@@ -1,7 +1,7 @@
 "use client";
 
 import { Category, Product } from "@/app/types/types";
-import { Loader2, MessageCircle } from "lucide-react";
+import { MessageCircle } from "lucide-react";
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import {
