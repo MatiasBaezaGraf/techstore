@@ -37,17 +37,19 @@ export async function updateSession(request: NextRequest) {
 		data: { user },
 	} = await supabase.auth.getUser();
 
-	console.log("middleware.ts: user", user);
-
 	if (
 		!user &&
 		!request.nextUrl.pathname.startsWith("/login") &&
 		!request.nextUrl.pathname.startsWith("/auth")
 	) {
-		console.log("middleware.ts: redirecting to /login");
 		// no user, potentially respond by redirecting the user to the login page
 		const url = request.nextUrl.clone();
 		url.pathname = "/login";
+		return NextResponse.redirect(url);
+	} else if (user && request.nextUrl.pathname.startsWith("/login")) {
+		// user is logged in and trying to access the login page
+		const url = request.nextUrl.clone();
+		url.pathname = "/dashboard";
 		return NextResponse.redirect(url);
 	}
 

@@ -16,7 +16,10 @@ export async function middleware(request: NextRequest) {
 	// Añade protección de autenticación a /dashboard
 	// if (request.nextUrl.pathname === "/") {
 
-	if (url.pathname.startsWith("/dashboard")) {
+	if (
+		url.pathname.startsWith("/dashboard") ||
+		url.pathname.startsWith("/login")
+	) {
 		return await updateSession(request);
 	}
 
@@ -24,5 +27,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-	matcher: ["/", "/dashboard/:path*"],
+	matcher: ["/", "/login", "/dashboard/:path*"],
 };

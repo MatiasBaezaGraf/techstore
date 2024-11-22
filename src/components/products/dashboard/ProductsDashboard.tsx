@@ -137,7 +137,7 @@ export const ProductsDashboard = ({
 		);
 
 	return (
-		<div className="container mx-auto p-4">
+		<div className="w-full max-w-[1536px] p-4 mx-auto">
 			<div className="flex justify-between items-center mb-4">
 				<h1 className="text-2xl font-bold">Productos</h1>
 				<Link href="/dashboard/new-product">
@@ -163,7 +163,7 @@ export const ProductsDashboard = ({
 
 			<Sheet>
 				<div
-					className={`flex items-center mb-4 w-fit border rounded-md ${
+					className={`flex items-center bg-white mb-4 w-fit border rounded-md ${
 						filters.category_id || filters.visibility || filters.name
 							? "border-secondary"
 							: ""
@@ -277,7 +277,7 @@ export const ProductsDashboard = ({
 				</SheetContent>
 			</Sheet>
 
-			<div className="flex flex-col border items-end rounded-md">
+			<div className="flex flex-col border items-end rounded-md bg-white">
 				<Pagination className="w-fit mx-0">
 					<PaginationContent className="text-sm">
 						<span className="text-secondary/70">
