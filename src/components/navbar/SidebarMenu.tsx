@@ -19,7 +19,7 @@ import { Logo } from "../general/Logo";
 import { Category } from "@/app/types/types";
 import Link from "next/link";
 
-export const iconMap = {
+const iconMap = {
 	Laptop,
 	Tablet,
 	TabletSmartphone,
@@ -125,7 +125,7 @@ export const SidebarMenu = ({
 									className="w-full justify-start flex flex-row gap-2 p-1 text-base text-alternative bg-secondary-dark hover:bg-secondary"
 								>
 									<RefreshCcw />
-									Usados
+									Renovados
 								</Link>
 							</li>
 							<li>

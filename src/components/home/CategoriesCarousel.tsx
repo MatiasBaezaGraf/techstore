@@ -33,9 +33,9 @@ export const CategoriesCarousel = ({
 					{categories.map((category, index) => (
 						<CarouselItem
 							key={index}
-							className="basis-full md:basis-1/2 lg:basis-1/3"
+							className="basis-full md:basis-1/2 lg:basis-full"
 						>
-							<div className="relative h-52 w-full rounded-lg transform duration-200 hover:scale-[1.01] hover:border-primary">
+							<div className="relative h-52 lg:h-96 w-full rounded-lg transform duration-200 hover:scale-[1.01] hover:border-primary">
 								<Link href={`/search?category_id=${category.id}`}>
 									<Image
 										src={cdnUrl + "/categoryImages/" + category.imageName}

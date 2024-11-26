@@ -3,8 +3,26 @@ import { ProductsCarousel } from "@/components/home/ProductsCarousel";
 import { CategoriesCarousel } from "@/components/home/CategoriesCarousel";
 import { SearchInputForm } from "@/components/general/SearchInputForm";
 import { Logo } from "@/components/general/Logo";
-import { Laptop, Smartphone } from "lucide-react";
+import {
+	Laptop,
+	RefreshCcw,
+	Gamepad2,
+	Tablet,
+	Star,
+	TabletSmartphone,
+	Tag,
+} from "lucide-react";
 import { InfoCards } from "@/components/home/InfoCards";
+import Link from "next/link";
+import { LinksBar } from "@/components/home/LinksBar";
+import { Category, HomeLink } from "../types/types";
+
+const iconMap = {
+	Laptop,
+	Tablet,
+	TabletSmartphone,
+	Gamepad2,
+};
 
 export default async function HomePage() {
 	// Fetch destacado productos
@@ -16,7 +34,10 @@ export default async function HomePage() {
 		highlighted?: boolean;
 	}) => {
 		const supabase = await createClient();
-		const { data, error } = await supabase.from("products").select("*");
+		const { data, error } = await supabase
+			.from("products")
+			.select("*")
+			.eq("show", true);
 
 		if (error) {
 			throw error;
@@ -60,16 +81,46 @@ export default async function HomePage() {
 			fetchCategories(),
 		]);
 
+	const categoryLinks: HomeLink[] = categories.map((category: Category) => {
+		const IconElement = iconMap[category.icon];
+
+		return {
+			title: category.name,
+			url: `/search?category_id=${category.id}`,
+			icon: <IconElement size={22} />,
+		};
+	});
+
 	return (
 		<div className=" flex flex-col gap-3 w-full max-w-[1160px] mx-auto">
-			<div className="flex flex-row items-center pt-4 ">
-				<div className="hidden md:block">
-					<Logo size={40} />
+			<div className="flex flex-col  w-full pt-0 md:py-4">
+				<div className="flex flex-row items-center pt-4 md:pt-0 ">
+					<Link href="/" className="hidden md:block">
+						<Logo size={40} />
+					</Link>
+					<div className="py-4 px-3 max-w-2xl w-full mx-auto ">
+						<SearchInputForm />
+					</div>
+					<div className="w-[160px] hidden md:block" />
 				</div>
-				<div className="py-4 px-3 max-w-2xl w-full mx-auto ">
-					<SearchInputForm />
+
+				<div className="hidden md:flex flex-row gap-3">
+					<LinksBar
+						links={[
+							{
+								title: "Nuevos",
+								url: "/search?new=true",
+								icon: <Tag size={22} />,
+							},
+							{
+								title: "Renovados",
+								url: "/search?new=false",
+								icon: <RefreshCcw size={22} />,
+							},
+							...categoryLinks,
+						]}
+					/>
 				</div>
-				<div className="w-[160px] hidden md:block" />
 			</div>
 
 			{/* Carrusel de categorías */}
@@ -81,6 +132,7 @@ export default async function HomePage() {
 			<div className="px-3">
 				<ProductsCarousel
 					title="Productos destacados"
+					icon={<Star size={24} />}
 					categories={categories}
 					products={highlightedProducts}
 				/>
@@ -93,7 +145,7 @@ export default async function HomePage() {
 			<div className="px-3">
 				<ProductsCarousel
 					title="Smartphones"
-					icon={<Smartphone size={24} />}
+					icon={<TabletSmartphone size={24} />}
 					categories={categories}
 					products={smartphones}
 				/>

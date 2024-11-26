@@ -40,3 +40,9 @@ export type Sorting = {
 	sortBy?: string;
 	sortDirection?: string;
 };
+
+export type HomeLink = {
+	url: string;
+	icon: React.ReactNode;
+	title: string;
+};

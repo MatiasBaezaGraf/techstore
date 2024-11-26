@@ -4,6 +4,8 @@ import {
 	Carousel,
 	CarouselContent,
 	CarouselItem,
+	CarouselNext,
+	CarouselPrevious,
 } from "@/components/ui/carousel";
 
 import { Category, Product } from "@/app/types/types";
@@ -53,8 +55,8 @@ export const ProductsCarousel = ({
 						</CarouselItem>
 					))}
 				</CarouselContent>
-				{/* <CarouselPrevious className="left-2  border-0 bg-transparent" />
-				<CarouselNext className="right-2  border-0" /> */}
+				<CarouselPrevious className="left-2  border-0 bg-transparent" />
+				<CarouselNext className="right-2  border-0" />
 			</Carousel>
 		</div>
 	);
