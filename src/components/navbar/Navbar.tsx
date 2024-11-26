@@ -1,6 +1,7 @@
 import { SidebarMenu } from "./SidebarMenu";
 import { Logo } from "../general/Logo";
 import { createClient } from "@/app/utils/server";
+import Link from "next/link";
 
 export const Navbar = () => {
 	async function fetchCategories() {
@@ -18,9 +19,13 @@ export const Navbar = () => {
 	}
 	//Navbar transparente
 	return (
-		<div className="w-full fixed top-0 h-16 z-50 flex flex-row justify-between items-center p-3 bg-secondary-dark">
-			<SidebarMenu fetchCategories={fetchCategories} />
-			<Logo />
+		<div className="w-full fixed top-0 h-16 z-50 flex flex-row justify-between items-center md:hidden bg-secondary">
+			<div className="flex flex-row justify-between w-full items-center p-3 mx-auto max-w-[1160px] ">
+				<SidebarMenu fetchCategories={fetchCategories} />
+				<Link href="/" className="flex items-center gap-2">
+					<Logo />
+				</Link>
+			</div>
 		</div>
 	);
 };

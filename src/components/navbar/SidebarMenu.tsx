@@ -9,6 +9,7 @@ import {
 	Tag,
 	RefreshCcw,
 	House,
+	LogIn,
 } from "lucide-react";
 import { Button } from "../ui/button";
 import { Sheet, SheetContent, SheetTitle, SheetTrigger } from "../ui/sheet";
@@ -125,6 +126,16 @@ export const SidebarMenu = ({
 								>
 									<RefreshCcw />
 									Usados
+								</Link>
+							</li>
+							<li>
+								<Link
+									onClick={() => setIsOpen(false)}
+									href={"/login"}
+									className="w-full justify-start flex flex-row gap-2 p-1 text-base text-alternative/50 bg-secondary-dark hover:bg-secondary"
+								>
+									<LogIn />
+									Iniciar sesión
 								</Link>
 							</li>
 						</ul>

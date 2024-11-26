@@ -18,7 +18,7 @@ export const SearchInputForm = () => {
 	};
 
 	return (
-		<form className="relative" onSubmit={handleSearch}>
+		<form className="relative w-full" onSubmit={handleSearch}>
 			<button
 				type="submit"
 				className="absolute left-3 top-1/2 transform -translate-y-1/2 text-neutral-400 hover:text-alternative"

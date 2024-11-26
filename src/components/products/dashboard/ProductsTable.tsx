@@ -73,7 +73,9 @@ export const ProductsTable = ({
 			{/* <TableCaption>A list of your recent invoices.</TableCaption> */}
 			<TableHeader>
 				<TableRow>
-					<TableHead className="w-[100px]">Imagen</TableHead>
+					<TableHead className="w-[100px] hidden md:table-cell">
+						Imagen
+					</TableHead>
 					<TableHead>Nombre</TableHead>
 					<TableHead>Categoría</TableHead>
 					<TableHead>Precio</TableHead>
@@ -84,7 +86,7 @@ export const ProductsTable = ({
 			<TableBody>
 				{products.map((product) => (
 					<TableRow key={product.id}>
-						<TableCell>
+						<TableCell className="hidden md:table-cell">
 							{product.imageName ? (
 								<Image
 									src={`${cdnUrl}/productImages/${product.imageName}`}
@@ -99,7 +101,9 @@ export const ProductsTable = ({
 								</div>
 							)}
 						</TableCell>
-						<TableCell>{product.name}</TableCell>
+						<TableCell>
+							<span className="line-clamp-2">{product.name}</span>
+						</TableCell>
 						<TableCell>
 							{
 								categories.find(
@@ -108,7 +112,9 @@ export const ProductsTable = ({
 							}
 						</TableCell>
 						<TableCell>
-							<span className="font-medium">U$ {product.price}</span>
+							<span className="font-medium text-nowrap">
+								U$ {product.price}
+							</span>
 						</TableCell>
 						<TableCell>
 							<Switch
@@ -117,7 +123,7 @@ export const ProductsTable = ({
 								onCheckedChange={() => handleShowChange(product)}
 							/>
 						</TableCell>
-						<TableCell>
+						<TableCell className="flex flex-row">
 							<Link
 								href={`/dashboard/edit-product/${product.id}`}
 								className="mr-3"

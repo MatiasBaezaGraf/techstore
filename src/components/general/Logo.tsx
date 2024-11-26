@@ -1,10 +1,16 @@
 import Image from "next/image";
 
-export const Logo = () => {
+export const Logo = ({ size = 16 }: { size?: number }) => {
 	return (
-		<div className="relative w-16 h-16">
+		<div
+			style={{
+				width: `${size * 4}px`,
+				height: `${size * 4}px`,
+			}}
+			className="relative"
+		>
 			<Image
-				src="/logo.jpg"
+				src="/logoTransparent.png"
 				alt="Logo de la tienda"
 				layout="fill"
 				objectFit="contain"

@@ -1,33 +1,51 @@
-import { Instagram } from "lucide-react";
-import Image from "next/image";
+import { Instagram, MessageCircle } from "lucide-react";
 import Link from "next/link";
+import { Logo } from "./Logo";
 
 export const Footer = () => {
 	return (
-		<footer className="mt-8 text-alternative py-2 border-t border-accent bg-secondary-light">
+		<footer className="mt-auto text-alternative py-2 border-t border-alternative/10  bg-secondary">
 			<div className="container mx-auto px-4">
-				<div className="flex flex-col items-center md:flex-row md:justify-between">
-					<div className="">
-						<Image
-							src="/logoTransparent.png"
-							alt="Logo de la tienda"
-							width={150}
-							height={60}
-							objectFit="contain"
-						/>
+				<div className="flex flex-col items-center gap-3">
+					<div className="flex items-center gap-4">
+						<Logo size={30} />
 					</div>
-					<div className="flex space-x-6">
+
+					<div className="flex flex-wrap justify-center gap-6">
 						<Link
-							href="https://www.instagram.com/techstore.lsm?igsh=eTRxYXp6cmF0d3Rx"
+							href="https://instagram.com/techstore"
 							target="_blank"
-							aria-label="Síguenos en Instagram"
+							rel="noopener noreferrer"
+							className="flex items-center gap-2 text-alternative hover:text-accent/80"
 						>
-							<Instagram className="w-6 h-6 text-white hover:text-green-500 transition-colors" />
+							<Instagram className="w-6 h-6" />
+							<span className="text-sm">@techstore</span>
+						</Link>
+						|
+						<Link
+							href="https://wa.me/595981123456"
+							target="_blank"
+							rel="noopener noreferrer"
+							className="flex items-center gap-2 text-alternative hover:text-accent/80"
+						>
+							<MessageCircle className="w-6 h-6" />
+							<span className="text-sm">+595 981 123456</span>
+						</Link>
+						|
+						<Link
+							href="https://wa.me/595981789012"
+							target="_blank"
+							rel="noopener noreferrer"
+							className="flex items-center gap-2 text-alternative hover:text-accent/80"
+						>
+							<MessageCircle className="w-6 h-6" />
+							<span className="text-sm">+595 981 789012</span>
 						</Link>
 					</div>
-				</div>
-				<div className="mt-8 text-center text-sm text-gray-400">
-					<p>&copy; {new Date().getFullYear()} Techstore</p>
+
+					<p className="text-sm text-gray-400">
+						© {2024} TechStore. Todos los derechos reservados.
+					</p>
 				</div>
 			</div>
 		</footer>

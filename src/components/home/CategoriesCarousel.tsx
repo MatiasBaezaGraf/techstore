@@ -9,43 +9,20 @@ import {
 	CarouselNext,
 	CarouselPrevious,
 } from "../ui/carousel";
-import { useEffect, useState } from "react";
-import { Loader2 } from "lucide-react";
 import Link from "next/link";
 
 export const CategoriesCarousel = ({
-	fetchCategories,
+	categories,
 }: {
-	fetchCategories: () => Promise<Category[]>;
+	categories: Category[];
 }) => {
 	const cdnUrl = process.env.NEXT_PUBLIC_SUPABASE_CDN_URL;
 
-	const [categories, setCategories] = useState<Category[]>([]);
-
-	useEffect(() => {
-		const getAndSetCategories = async () => {
-			const categories = await fetchCategories();
-
-			setCategories(categories);
-		};
-
-		getAndSetCategories();
-	}, []);
-
-	if (categories.length === 0) {
-		return (
-			<div className="mt-4">
-				<h2 className="text-xl font-bold  mb-2 text-alternative">Categorías</h2>
-				<div className="container mx-auto p-4 flex flex-col h-[200px] bg-secondary-light rounded-lg justify-center items-center  animate-pulse">
-					<Loader2 size={50} className="mx-auto animate-spin text-accent" />
-				</div>
-			</div>
-		);
-	}
-
 	return (
 		<>
-			<h2 className="text-xl font-bold  mb-2 text-alternative">Categorías</h2>
+			<h2 className="text-xl  lg:text-2xl font-bold  mb-2 lg:mb-4  text-alternative">
+				Categorías destacadas
+			</h2>
 			<Carousel
 				opts={{
 					loop: true,
@@ -54,7 +31,10 @@ export const CategoriesCarousel = ({
 			>
 				<CarouselContent>
 					{categories.map((category, index) => (
-						<CarouselItem key={index} className="basis-full">
+						<CarouselItem
+							key={index}
+							className="basis-full md:basis-1/2 lg:basis-1/3"
+						>
 							<div className="relative h-52 w-full rounded-lg transform duration-200 hover:scale-[1.01] hover:border-primary">
 								<Link href={`/search?category_id=${category.id}`}>
 									<Image
