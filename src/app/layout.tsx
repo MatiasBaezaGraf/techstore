@@ -15,7 +15,7 @@ const geistMono = localFont({
 });
 
 export const metadata: Metadata = {
-	title: "Techstore",
+	title: "Techstore | Tienda de tecnología",
 	description: "Tienda de tecnología",
 };
 
