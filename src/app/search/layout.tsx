@@ -9,7 +9,7 @@ export default function SearchLayout({
 	return (
 		<div className="flex flex-col bg-secondary-dark">
 			<Navbar />
-			<div className="mt-16">{children}</div>
+			<div className="mt-16 md:mt-0 mb-16">{children}</div>
 			<Footer />
 		</div>
 	);

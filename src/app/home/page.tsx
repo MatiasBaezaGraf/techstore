@@ -98,7 +98,7 @@ export default async function HomePage() {
 					<Link href="/" className="hidden md:block">
 						<Logo size={40} />
 					</Link>
-					<div className="py-4 px-3 max-w-2xl w-full mx-auto ">
+					<div className="py-4 md:px-0 px-3 max-w-2xl w-full mx-auto ">
 						<SearchInputForm />
 					</div>
 					<div className="w-[160px] hidden md:block" />

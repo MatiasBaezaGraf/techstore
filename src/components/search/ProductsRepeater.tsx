@@ -25,7 +25,7 @@ export const ProductsRepeater = ({
 	}
 
 	return (
-		<div className="grid grid-cols-2 lg:grid-cols-3 gap-3">
+		<div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:w-full">
 			{products.map((product) => (
 				<ProductCard
 					key={product.id}

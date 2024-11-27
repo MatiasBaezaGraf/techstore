@@ -3,18 +3,38 @@
 import {
 	Category,
 	Filters,
+	HomeLink,
 	Pagination as PaginationType,
 	Product,
 	Sorting,
 } from "@/app/types/types";
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { PaginationControls } from "./PaginationControls";
 import { ProductsRepeater } from "./ProductsRepeater";
 import { FiltersBar } from "./FiltersBar";
 import { SortingBar } from "./SortingBar";
-import { Search } from "lucide-react";
+import {
+	Gamepad2,
+	Laptop,
+	RefreshCcw,
+	Search,
+	Tablet,
+	TabletSmartphone,
+	Tag,
+} from "lucide-react";
 import { Input } from "../ui/input";
+import { LinksBar } from "../home/LinksBar";
+import { Logo } from "../general/Logo";
+import { FiltersOrderSidebar } from "./FiltersOrderSidebar";
+
+const iconMap = {
+	Laptop,
+	Tablet,
+	TabletSmartphone,
+	Gamepad2,
+};
 
 export const SearchView = ({
 	fetchProducts,
@@ -57,10 +77,21 @@ export const SearchView = ({
 
 	const [pagination, setPagination] = useState<PaginationType>({
 		page: 1,
-		limit: 6,
+		limit: 12,
 		totalPages: 0,
 		pageItems: [],
 	});
+
+	const categoryLinks: HomeLink[] =
+		categories?.map((category: Category) => {
+			const IconElement = iconMap[category.icon];
+
+			return {
+				title: category.name,
+				url: `/search?category_id=${category.id}`,
+				icon: <IconElement size={22} />,
+			};
+		}) || [];
 
 	useEffect(() => {
 		fetchProducts().then((data) => {
@@ -310,7 +341,9 @@ export const SearchView = ({
 			}));
 
 			// Actualiza solo el filtro correspondiente en la URL
-			updateSearchParams({ [attribute]: value ? String(value) : undefined });
+			updateSearchParams({
+				[attribute]: value !== undefined ? String(value) : undefined,
+			});
 		}
 	};
 
@@ -379,18 +412,42 @@ export const SearchView = ({
 		);
 
 	return (
-		<div className="min-h-withNav p-3 flex flex-col justify-between">
-			<div className="relative mb-3">
-				<Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-neutral-400" />
-				<Input
-					onChange={(e) => handleFiltersChange("name", e.target.value)}
-					type="search"
-					placeholder="Buscar productos..."
-					className="w-full pl-10 bg-secondary-light border-accent text-alternative placeholder-neutral-400 focus:border-accent"
+		<div className="min-h-withNav p-3 md:p-0 flex w-full max-w-[1160px] mx-auto  flex-col ">
+			<div className="flex flex-row items-center w-full pt-4  ">
+				<Link href="/" className="hidden md:block">
+					<Logo size={40} />
+				</Link>
+
+				<div className="relative  w-full mx-auto max-w-2xl">
+					<Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-neutral-400" />
+					<Input
+						onChange={(e) => handleFiltersChange("name", e.target.value)}
+						type="search"
+						placeholder="Buscar productos..."
+						className="w-full pl-10   bg-secondary-light border-accent text-alternative placeholder-neutral-400 focus:border-accent"
+					/>
+				</div>
+				<div className="w-[160px] hidden md:block" />
+			</div>
+			<div className="hidden md:flex flex-row gap-3 mb-10">
+				<LinksBar
+					links={[
+						{
+							title: "Nuevos",
+							url: "/search?new=true",
+							icon: <Tag size={22} />,
+						},
+						{
+							title: "Renovados",
+							url: "/search?new=false",
+							icon: <RefreshCcw size={22} />,
+						},
+						...categoryLinks,
+					]}
 				/>
 			</div>
 
-			<div className="flex flex-row gap-3 mb-3">
+			<div className="flex flex-row gap-3 mb-3 md:hidden">
 				<FiltersBar
 					filters={filters}
 					handleFiltersChange={handleFiltersChange}
@@ -403,18 +460,44 @@ export const SearchView = ({
 					cleanSorting={cleanFiltersAndSorting}
 				/>
 			</div>
-			<h2 className="text-xl font-semibold text-primary/70 mb-3">
-				{filters.name}
-			</h2>
 
-			<div className="mb-8">
-				<ProductsRepeater
-					products={pagination.pageItems}
-					categories={categories}
-				/>
+			{filters.name && (
+				<h2 className="text-xl md:text-3xl font-normal text-primary/70 mb-8 flex flex-row gap-2">
+					<span className="hidden md:block">
+						Resultados de la búsqueda por:
+					</span>{" "}
+					<span className="font-semibold">{filters.name}</span>
+				</h2>
+			)}
+
+			<div className="mb-8 md:flex md:flex-row md:gap-5 flex-1">
+				<div className="hidden md:flex w-[20%]">
+					<FiltersOrderSidebar
+						filters={filters}
+						sorting={sorting}
+						handleFiltersChange={handleFiltersChange}
+						categories={categories}
+						cleanFiltersAndSorting={cleanFiltersAndSorting}
+						handleSortingChange={handleSortingChange}
+					/>
+				</div>
+
+				<div className="w-full flex flex-col justify-between md:w-[80%] flex-1">
+					<ProductsRepeater
+						products={pagination.pageItems}
+						categories={categories}
+					/>
+
+					<div className="hidden md:block mt-8">
+						<PaginationControls
+							pagination={pagination}
+							handlePageChange={handlePageChange}
+						/>
+					</div>
+				</div>
 			</div>
 
-			<div className="mt-auto">
+			<div className="mt-auto md:hidden">
 				<PaginationControls
 					pagination={pagination}
 					handlePageChange={handlePageChange}

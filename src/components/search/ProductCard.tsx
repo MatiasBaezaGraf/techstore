@@ -33,12 +33,14 @@ export const ProductCard = ({
 			<CardContent className="p-0 flex-1 flex flex-col">
 				<div className={`flex flex-col h-full`}>
 					<Link href={`/products/${category.name}/${product.slug}`} passHref>
-						<div className={`relative mb-2 overflow-hidden h-[175px]`}>
+						<div
+							className={`relative mb-2 overflow-hidden h-[175px] bg-alternative`}
+						>
 							<Image
 								src={`${cdnUrl}/productImages/${product.imageName}`}
 								alt={product.name}
 								layout="fill"
-								className="rounded-t-md hover:scale-105 transform duration-200 object-cover"
+								className="rounded-t-md hover:scale-105 transform duration-200 object-contain"
 							/>
 						</div>
 					</Link>
