@@ -23,6 +23,8 @@ import { SearchInputForm } from "../general/SearchInputForm";
 import { Logo } from "../general/Logo";
 import { LinksBar } from "../home/LinksBar";
 import { ProductsCarousel } from "../home/ProductsCarousel";
+import { MobileSkeleton } from "./MobileSkeleton";
+import { DesktopSkeleton } from "./DesktopSkeleton";
 
 const iconMap = {
 	Laptop,
@@ -98,14 +100,13 @@ export const ProductView = ({
 
 	if (!product || !categories || !category || !categoryProducts)
 		return (
-			<div className="container mx-auto p-4 flex flex-col gap-3 py-8 min-h-withNav justify-start items-start  ">
-				<div className="bg-secondary-light w-full mb-3 h-10 animate-pulse rounded"></div>
-				<div className="bg-secondary-light w-full mb-3 aspect-square animate-pulse rounded"></div>
-				<div className="bg-secondary-light w-1/3 h-4 animate-pulse rounded"></div>
-				<div className="bg-secondary-light w-2/3 h-6 animate-pulse rounded"></div>
-				<div className="bg-secondary-light w-1/5 h-6 animate-pulse rounded"></div>
-				<div className="bg-secondary-light w-1/2 h-6 animate-pulse rounded mb-3"></div>
-				<div className="bg-secondary-light w-full h-10 animate-pulse rounded"></div>
+			<div className="min-h-withNav flex w-full max-w-[1160px] mx-auto items-stretch flex-col">
+				<div className="md:hidden">
+					<MobileSkeleton />
+				</div>
+				<div className="hidden md:block">
+					<DesktopSkeleton />
+				</div>
 			</div>
 		);
 
@@ -168,7 +169,7 @@ export const ProductView = ({
 					Volver
 				</Link>
 			</span>
-			<div className="space-y-6 md:space-y-0 md:flex md:flex-row md:justify-bewteen md:w-full md:items-start gap-8 py-4">
+			<div className="space-y-6 md:space-y-0 md:flex md:flex-row md:justify-bewteen md:justify-bewteen  md:items-start gap-8 py-4">
 				<Carousel className="w-full  mx-auto md:mx-0 max-w-full md:basis-1/2">
 					<CarouselContent>
 						{/* {product.images.map((src, index) => ( */}
