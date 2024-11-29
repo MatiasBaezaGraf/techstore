@@ -7,6 +7,7 @@ import {
 	Gamepad2,
 	Laptop,
 	LayoutGrid,
+	LogIn,
 	MessageCircle,
 	RefreshCcw,
 	Tablet,
@@ -120,7 +121,17 @@ export const ProductView = ({
 					<div className="py-4 md:px-0 max-w-2xl w-full mx-auto ">
 						<SearchInputForm />
 					</div>
-					<div className="w-[160px] hidden md:block" />
+					<div className="w-[160px] hidden md:block text-right">
+						<Link href={`/login`}>
+							<Button
+								variant="ghost"
+								className=" text-alternative hover:bg-secondary-dark/40 hover:text-alternative"
+							>
+								<LogIn className="mr-2" />
+								Iniciar sesión
+							</Button>
+						</Link>
+					</div>
 				</div>
 
 				<div className="hidden md:flex flex-row gap-3">

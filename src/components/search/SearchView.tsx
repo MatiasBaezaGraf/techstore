@@ -19,6 +19,7 @@ import {
 	Gamepad2,
 	House,
 	Laptop,
+	LogIn,
 	RefreshCcw,
 	Search,
 	Tablet,
@@ -31,6 +32,7 @@ import { Logo } from "../general/Logo";
 import { FiltersOrderSidebar } from "./FiltersOrderSidebar";
 import { MobileSkeleton } from "./MobileSkeleton";
 import { DesktopSkeleton } from "./DesktopSkeleton";
+import { Button } from "../ui/button";
 
 const iconMap = {
 	Laptop,
@@ -412,7 +414,17 @@ export const SearchView = ({
 						className="w-full pl-10   bg-secondary-light border-accent text-alternative placeholder-neutral-400 focus:border-accent"
 					/>
 				</div>
-				<div className="w-[160px] hidden md:block" />
+				<div className="w-[160px] hidden md:block text-right">
+					<Link href={`/login`}>
+						<Button
+							variant="ghost"
+							className=" text-alternative hover:bg-secondary-dark/40 hover:text-alternative"
+						>
+							<LogIn className="mr-2" />
+							Iniciar sesión
+						</Button>
+					</Link>
+				</div>
 			</div>
 			<div className="hidden md:flex flex-row gap-3 mb-10">
 				<LinksBar

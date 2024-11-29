@@ -12,11 +12,13 @@ import {
 	TabletSmartphone,
 	Tag,
 	LayoutGrid,
+	LogIn,
 } from "lucide-react";
 import { InfoCards } from "@/components/home/InfoCards";
 import Link from "next/link";
 import { LinksBar } from "@/components/home/LinksBar";
 import { Category, HomeLink } from "../types/types";
+import { Button } from "@/components/ui/button";
 
 const iconMap = {
 	Laptop,
@@ -102,7 +104,17 @@ export default async function HomePage() {
 					<div className="py-4 md:px-0 px-3 max-w-2xl w-full mx-auto ">
 						<SearchInputForm />
 					</div>
-					<div className="w-[160px] hidden md:block" />
+					<div className="w-[160px] hidden md:block text-right">
+						<Link href={`/login`}>
+							<Button
+								variant="ghost"
+								className=" text-alternative hover:bg-secondary-dark/40 hover:text-alternative"
+							>
+								<LogIn className="mr-2" />
+								Iniciar sesión
+							</Button>
+						</Link>
+					</div>
 				</div>
 
 				<div className="hidden md:flex flex-row gap-3">
