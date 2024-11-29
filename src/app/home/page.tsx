@@ -11,6 +11,7 @@ import {
 	Star,
 	TabletSmartphone,
 	Tag,
+	LayoutGrid,
 } from "lucide-react";
 import { InfoCards } from "@/components/home/InfoCards";
 import Link from "next/link";
@@ -107,6 +108,11 @@ export default async function HomePage() {
 				<div className="hidden md:flex flex-row gap-3">
 					<LinksBar
 						links={[
+							{
+								title: "Tienda",
+								url: "/search",
+								icon: <LayoutGrid size={22} />,
+							},
 							{
 								title: "Nuevos",
 								url: "/search?new=true",

@@ -17,6 +17,7 @@ import { FiltersBar } from "./FiltersBar";
 import { SortingBar } from "./SortingBar";
 import {
 	Gamepad2,
+	House,
 	Laptop,
 	RefreshCcw,
 	Search,
@@ -28,6 +29,8 @@ import { Input } from "../ui/input";
 import { LinksBar } from "../home/LinksBar";
 import { Logo } from "../general/Logo";
 import { FiltersOrderSidebar } from "./FiltersOrderSidebar";
+import { MobileSkeleton } from "./MobileSkeleton";
+import { DesktopSkeleton } from "./DesktopSkeleton";
 
 const iconMap = {
 	Laptop,
@@ -383,30 +386,12 @@ export const SearchView = ({
 	if (!products || !categories)
 		// if (true)
 		return (
-			<div className="container mx-auto p-4 flex flex-col gap-3 min-h-withNav justify-center items-center  ">
-				<div className="bg-secondary-light w-full h-10 animate-pulse rounded"></div>
-				<div className="w-full flex flex-row gap-3">
-					<div className="bg-secondary-light w-full h-10 animate-pulse rounded"></div>
-					<div className="bg-secondary-light w-full h-10 animate-pulse rounded"></div>
+			<div className="min-h-withNav  w-full max-w-[1160px] mx-auto">
+				<div className="md:hidden">
+					<MobileSkeleton />
 				</div>
-				<div className="w-full flex flex-col gap-3 mt-3">
-					<div className="w-full flex flex-row gap-3">
-						<div className=" bg-secondary-light w-full h-80 animate-pulse rounded"></div>
-						<div className=" bg-secondary-light w-full h-80 animate-pulse rounded"></div>
-					</div>
-					<div className="w-full flex flex-row gap-3">
-						<div className="bg-secondary-light w-full h-80 animate-pulse rounded"></div>
-						<div className="bg-secondary-light w-full h-80 animate-pulse rounded"></div>
-					</div>
-					<div className="w-full flex flex-row gap-3">
-						<div className="bg-secondary-light w-full h-80 animate-pulse rounded"></div>
-						<div className="bg-secondary-light w-full h-80 animate-pulse rounded"></div>
-					</div>
-				</div>
-				<div className="w-full flex flex-row justify-center gap-3 mt-8">
-					<div className="bg-secondary-light h-10 aspect-square animate-pulse rounded"></div>
-					<div className="bg-secondary-light h-10 aspect-square  animate-pulse rounded"></div>
-					<div className="bg-secondary-light h-10 aspect-square  animate-pulse rounded"></div>
+				<div className="hidden md:block">
+					<DesktopSkeleton />
 				</div>
 			</div>
 		);
@@ -418,7 +403,7 @@ export const SearchView = ({
 					<Logo size={40} />
 				</Link>
 
-				<div className="relative  w-full mx-auto max-w-2xl">
+				<div className="relative  w-full mx-auto max-w-2xl mb-3 md:mb-0">
 					<Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-neutral-400" />
 					<Input
 						onChange={(e) => handleFiltersChange("name", e.target.value)}
@@ -432,6 +417,11 @@ export const SearchView = ({
 			<div className="hidden md:flex flex-row gap-3 mb-10">
 				<LinksBar
 					links={[
+						{
+							title: "Inicio",
+							url: "/home",
+							icon: <House size={22} />,
+						},
 						{
 							title: "Nuevos",
 							url: "/search?new=true",

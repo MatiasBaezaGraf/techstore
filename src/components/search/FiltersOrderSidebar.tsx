@@ -15,7 +15,7 @@ import {
 } from "../ui/collapsible";
 import { Button } from "../ui/button";
 import { ChevronDown, FilterX } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 // import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
 // import { Label } from "../ui/label";
 
@@ -43,11 +43,23 @@ export const FiltersOrderSidebar = ({
 	const [categoriesOpen, setCategoriesOpen] = useState(false);
 	const [conditionOpen, setConditionOpen] = useState(false);
 
+	// If a category or condition filter are active, put the respective collapsible open on load
+	useEffect(() => {
+		if (filters.category_id) {
+			setCategoriesOpen(true);
+		}
+		if (filters.new !== undefined) {
+			setConditionOpen(true);
+		}
+	}, []);
+
 	return (
 		<div className="flex flex-col text-alternative w-full">
 			<SidebarHeader>
 				<h2 className="text-xl font-semibold ">Filtros</h2>
-				{(Object.values(filters).filter((value) => value).length > 0 ||
+				{(Object.values(filters).some(
+					(value) => value !== undefined && value !== null
+				) ||
 					sorting.sortBy) && (
 					<Button
 						variant="outline"
@@ -132,7 +144,7 @@ export const FiltersOrderSidebar = ({
 				</SidebarGroup>
 				<SidebarGroup>
 					<SidebarGroupContent className="px-0 border-b border-alternative/20">
-						<Collapsible className="pb-6 ">
+						<Collapsible open={categoriesOpen} className="pb-6 ">
 							<CollapsibleTrigger
 								onClick={() => setCategoriesOpen(!categoriesOpen)}
 								className="text-lg font-semibold text-alternative px-0 w-full flex flex-row justify-between items-center"
@@ -146,7 +158,7 @@ export const FiltersOrderSidebar = ({
 							</CollapsibleTrigger>
 							<CollapsibleContent>
 								<RadioGroup
-									value={filters.category_id}
+									value={filters.category_id || ""}
 									onValueChange={(value) =>
 										handleFiltersChange("category_id", value)
 									}
@@ -181,7 +193,7 @@ export const FiltersOrderSidebar = ({
 				</SidebarGroup>
 				<SidebarGroup>
 					<SidebarGroupContent>
-						<Collapsible className="pb-6 ">
+						<Collapsible className="pb-6 " open={conditionOpen}>
 							<CollapsibleTrigger
 								onClick={() => setConditionOpen(!conditionOpen)}
 								className="text-lg font-semibold text-alternative px-0 w-full flex flex-row justify-between items-center"
@@ -195,7 +207,7 @@ export const FiltersOrderSidebar = ({
 							</CollapsibleTrigger>
 							<CollapsibleContent>
 								<RadioGroup
-									value={filters.new?.toString()}
+									value={filters.new?.toString() || ""}
 									onValueChange={(value) => handleFiltersChange("new", value)}
 									className="flex flex-col space-y-2 pb-2 pt-4 "
 								>

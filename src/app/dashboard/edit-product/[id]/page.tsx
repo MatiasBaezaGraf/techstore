@@ -63,7 +63,10 @@ export default async function EditProductPage({ params }: { params: Params }) {
 			new: product.new,
 			highlighted: product.highlighted,
 			slug:
-				product.name.replace(/ /g, "_").toLowerCase() +
+				product.name
+					.replace(/[^a-zA-Z0-9\s]/g, "") // Elimina todos los caracteres especiales excepto letras, números y espacios.
+					.replace(/\s+/g, "_") // Reemplaza los espacios por guiones bajos.
+					.toLowerCase() +
 				"_" +
 				Math.random().toString(36).substring(7),
 		};

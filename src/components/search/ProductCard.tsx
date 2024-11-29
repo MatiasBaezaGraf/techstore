@@ -67,7 +67,7 @@ export const ProductCard = ({
 							target="_blank"
 						>
 							<Button
-								className="w-full   sm:w-auto text-sm border-accent bg-accent/30 hover:bg-accent/40  hover:border"
+								className="w-full   text-sm text-secondary-dark bg-accent font-semibold hover:bg-accent/80 "
 								size={"sm"}
 							>
 								<MessageCircle className="mr-1" />

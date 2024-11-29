@@ -1,23 +1,18 @@
 import type { Metadata } from "next";
-import localFont from "next/font/local";
+import { Inter } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "@/components/ui/toaster";
-
-const geistSans = localFont({
-	src: "./fonts/GeistVF.woff",
-	variable: "--font-geist-sans",
-	weight: "100 900",
-});
-const geistMono = localFont({
-	src: "./fonts/GeistMonoVF.woff",
-	variable: "--font-geist-mono",
-	weight: "100 900",
-});
 
 export const metadata: Metadata = {
 	title: "Techstore | Tienda de tecnología",
 	description: "Tienda de tecnología",
 };
+
+// If loading a variable font, you don't need to specify the font weight
+const inter = Inter({
+	subsets: ["latin"],
+	display: "swap",
+});
 
 export default function RootLayout({
 	children,
@@ -29,9 +24,7 @@ export default function RootLayout({
 			<head>
 				<link rel="icon" href="/favicon.ico" sizes="any" />
 			</head>
-			<body
-				className={`${geistSans.variable} ${geistMono.variable} antialiased bg-accent`}
-			>
+			<body className={`${inter.className} antialiased bg-accent`}>
 				{children}
 				<Toaster />
 			</body>
