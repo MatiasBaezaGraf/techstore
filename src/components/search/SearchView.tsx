@@ -17,6 +17,7 @@ import { FiltersBar } from "./FiltersBar";
 import { SortingBar } from "./SortingBar";
 import {
 	Gamepad2,
+	Cable,
 	House,
 	Laptop,
 	LogIn,
@@ -39,6 +40,7 @@ const iconMap = {
 	Tablet,
 	TabletSmartphone,
 	Gamepad2,
+	Cable,
 };
 
 export const SearchView = ({

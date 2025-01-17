@@ -7,6 +7,7 @@ import {
 	Laptop,
 	RefreshCcw,
 	Gamepad2,
+	Cable,
 	Tablet,
 	Star,
 	TabletSmartphone,
@@ -25,6 +26,7 @@ const iconMap = {
 	Tablet,
 	TabletSmartphone,
 	Gamepad2,
+	Cable,
 };
 
 export default async function HomePage() {

@@ -5,6 +5,7 @@ import {
 	Menu,
 	TabletSmartphone,
 	Gamepad2,
+	Cable,
 	Tablet,
 	Tag,
 	RefreshCcw,
@@ -24,6 +25,7 @@ const iconMap = {
 	Tablet,
 	TabletSmartphone,
 	Gamepad2,
+	Cable,
 };
 
 export const SidebarMenu = ({

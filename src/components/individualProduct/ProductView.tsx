@@ -5,6 +5,7 @@ import {
 	ChevronLeft,
 	ChevronRightIcon,
 	Gamepad2,
+	Cable,
 	Laptop,
 	LayoutGrid,
 	LogIn,
@@ -32,6 +33,7 @@ const iconMap = {
 	Tablet,
 	TabletSmartphone,
 	Gamepad2,
+	Cable,
 };
 
 export const ProductView = ({

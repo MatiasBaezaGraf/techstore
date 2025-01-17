@@ -25,7 +25,7 @@ export type Filters = {
 export type Category = {
 	id: number;
 	name: string;
-	icon: "Laptop" | "Tablet" | "TabletSmartphone" | "Gamepad2";
+	icon: "Laptop" | "Tablet" | "TabletSmartphone" | "Gamepad2" | "Cable";
 	imageName?: string;
 };
 
