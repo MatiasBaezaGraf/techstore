@@ -46,6 +46,7 @@ export const EditProductForm = ({
 		name: "",
 		description: "",
 		price: "",
+		stock: 0,
 		category_id: "",
 		slug: "",
 		image: null as File | null,
@@ -68,6 +69,7 @@ export const EditProductForm = ({
 				name: productToEdit[0].name,
 				description: productToEdit[0].description,
 				price: productToEdit[0].price.toString(),
+				stock: productToEdit[0].stock,
 				category_id: productToEdit[0].category_id.toString(),
 				image: null,
 				show: productToEdit[0].show,
@@ -99,6 +101,7 @@ export const EditProductForm = ({
 				name: string;
 				description: string;
 				price: string;
+				stock: number;
 				category_id: string;
 				image: File | null;
 				slug: string;
@@ -117,6 +120,7 @@ export const EditProductForm = ({
 				name: string;
 				description: string;
 				price: string;
+				stock: number;
 				category_id: string;
 				image: File | null;
 				slug: string;
@@ -225,6 +229,18 @@ export const EditProductForm = ({
 								min="0"
 								step="0.01"
 								defaultValue={product.price}
+								onChange={handleInputChange}
+								required
+							/>
+						</div>
+						<div className="space-y-2">
+							<Label htmlFor="stock">Stock</Label>
+							<Input
+								id="stock"
+								name="stock"
+								type="number"
+								min="0"
+								defaultValue={product.stock}
 								onChange={handleInputChange}
 								required
 							/>

@@ -78,6 +78,7 @@ export const ProductsTable = ({
 					</TableHead>
 					<TableHead>Nombre</TableHead>
 					<TableHead>Categoría</TableHead>
+					<TableHead>Stock</TableHead>
 					<TableHead>Precio</TableHead>
 					<TableHead>Visible</TableHead>
 					<TableHead>Acciones</TableHead>
@@ -96,8 +97,8 @@ export const ProductsTable = ({
 									className="rounded-md aspect-square object-cover"
 								/>
 							) : (
-								<div className="w-16 h-16 bg-neutral-200 rounded-md flex items-center justify-center">
-									<ImageOff className="h-8 w-8 text-neutral-400" />
+								<div className="w-8 h-8 bg-neutral-200 rounded-md flex items-center justify-center">
+									<ImageOff className="h-4 w-4 text-neutral-400" />
 								</div>
 							)}
 						</TableCell>
@@ -110,6 +111,9 @@ export const ProductsTable = ({
 									(category) => category.id === parseInt(product.category_id)
 								)?.name
 							}
+						</TableCell>
+						<TableCell>
+							<span className="font-medium text-nowrap">{product.stock}</span>
 						</TableCell>
 						<TableCell>
 							<span className="font-medium text-nowrap">

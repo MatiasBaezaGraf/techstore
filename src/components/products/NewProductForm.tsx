@@ -1,6 +1,6 @@
 "use client";
 
-import { Category } from "@/app/types/types";
+import { Category, ProductToInsert } from "@/app/types/types";
 
 import {
 	Card,
@@ -31,17 +31,7 @@ export const NewProductForm = ({
 	insertProduct,
 	fetchCategories,
 }: {
-	insertProduct: (product: {
-		name: string;
-		description: string;
-		price: number;
-		category_id: string;
-		image?: File;
-		show: boolean;
-		available: boolean;
-		new: boolean;
-		highlighted: boolean;
-	}) => Promise<void>;
+	insertProduct: (product: ProductToInsert) => Promise<void>;
 	fetchCategories: () => Promise<Category[]>;
 }) => {
 	const router = useRouter();
@@ -54,6 +44,7 @@ export const NewProductForm = ({
 		description: "",
 		price: "",
 		category_id: "",
+		stock: 0,
 		image: undefined as File | undefined,
 		show: true,
 		available: true,
@@ -169,6 +160,18 @@ export const NewProductForm = ({
 								min="0"
 								step="0.01"
 								value={product.price}
+								onChange={handleInputChange}
+								required
+							/>
+						</div>
+						<div className="space-y-2">
+							<Label htmlFor="stock">Stock</Label>
+							<Input
+								id="stock"
+								name="stock"
+								type="number"
+								min="0"
+								value={product.stock}
 								onChange={handleInputChange}
 								required
 							/>

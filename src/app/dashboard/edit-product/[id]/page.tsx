@@ -1,3 +1,4 @@
+import { ProductToInsert } from "@/app/types/types";
 import { createClient } from "@/app/utils/server";
 import { EditProductForm } from "@/components/products/EditProductForm";
 import { redirect } from "next/navigation";
@@ -25,17 +26,7 @@ export default async function EditProductPage({ params }: { params: Params }) {
 	}
 
 	async function editProduct(
-		product: {
-			name: string;
-			description: string;
-			price: number;
-			category_id: string;
-			image?: File;
-			show: boolean;
-			available: boolean;
-			new: boolean;
-			highlighted: boolean;
-		},
+		product: ProductToInsert,
 		previousImageName: string
 	) {
 		"use server";
@@ -46,6 +37,7 @@ export default async function EditProductPage({ params }: { params: Params }) {
 			name: string;
 			description: string;
 			price: number;
+			stock: number;
 			category_id: string;
 			show: boolean;
 			available: boolean;
@@ -57,6 +49,7 @@ export default async function EditProductPage({ params }: { params: Params }) {
 			name: product.name,
 			description: product.description,
 			price: product.price,
+			stock: product.stock,
 			category_id: product.category_id,
 			show: product.show,
 			available: product.available,

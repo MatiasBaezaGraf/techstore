@@ -1,19 +1,10 @@
 import { NewProductForm } from "@/components/products/NewProductForm";
 
 import { createClient } from "@/app/utils/server";
+import { ProductToInsert } from "@/app/types/types";
 
 export default function NewProductPage() {
-	async function insertProduct(product: {
-		name: string;
-		description: string;
-		price: number;
-		category_id: string;
-		image?: File;
-		show: boolean;
-		available: boolean;
-		new: boolean;
-		highlighted: boolean;
-	}) {
+	async function insertProduct(product: ProductToInsert) {
 		"use server";
 
 		const supabase = await createClient();
@@ -22,6 +13,7 @@ export default function NewProductPage() {
 			name: product.name,
 			description: product.description,
 			price: product.price,
+			stock: product.stock,
 			category_id: product.category_id,
 			imageName: product.image?.name || "",
 			show: product.show,

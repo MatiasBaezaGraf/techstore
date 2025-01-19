@@ -6,10 +6,24 @@ export type Product = {
 	category_id: string;
 	imageName?: string;
 	show: boolean;
+	stock: number;
 	available: boolean;
 	new: boolean;
 	highlighted: boolean;
 	slug: string;
+};
+
+export type ProductToInsert = {
+	name: string;
+	description: string;
+	price: number;
+	stock: number;
+	category_id: string;
+	image?: File;
+	show: boolean;
+	available: boolean;
+	new: boolean;
+	highlighted: boolean;
 };
 
 export type Filters = {
