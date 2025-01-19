@@ -23,23 +23,13 @@ export const Footer = () => {
 						</Link>
 						|
 						<Link
-							href="https://wa.me/595981123456"
+							href="https://wa.me/5493435079951"
 							target="_blank"
 							rel="noopener noreferrer"
 							className="flex items-center gap-2 text-alternative hover:text-accent/80"
 						>
 							<MessageCircle className="w-6 h-6" />
-							<span className="text-sm">+595 981 123456</span>
-						</Link>
-						|
-						<Link
-							href="https://wa.me/595981789012"
-							target="_blank"
-							rel="noopener noreferrer"
-							className="flex items-center gap-2 text-alternative hover:text-accent/80"
-						>
-							<MessageCircle className="w-6 h-6" />
-							<span className="text-sm">+595 981 789012</span>
+							<span className="text-sm">+54 9 3435 07‑9951</span>
 						</Link>
 					</div>
 
