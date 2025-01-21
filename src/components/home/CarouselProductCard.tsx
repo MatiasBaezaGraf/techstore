@@ -31,7 +31,7 @@ export const CarouselProductCard = ({
 	};
 
 	return (
-		<Card className="w-full max-w-sm min-h-full flex flex-col justify-between bg-secondary-light border border-neutral-500 overflow-hidden h-[305px] lg:h-[360px]">
+		<Card className="w-full max-w-sm min-h-full flex flex-col justify-between bg-secondary-light border border-neutral-500 overflow-hidden h-[325px] lg:h-[360px]">
 			<div className="flex flex-col justify-start h-full">
 				<Link href={`/products/${category.name}/${product.slug}`} passHref>
 					<div className="relative  h-[170px] lg:h-[200px]">
