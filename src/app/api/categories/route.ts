@@ -20,7 +20,9 @@ export async function GET() {
 		return {
 			status: 500,
 			body: {
-				error: "Error al obtener las categorías",
+				error: {
+					error: `Error al obtener las categorías: ${error}`,
+				},
 			},
 		};
 	}
