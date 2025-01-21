@@ -22,6 +22,7 @@ import { LinksBar } from "./LinksBar";
 import { CategoriesCarousel } from "./CategoriesCarousel";
 import { ProductsCarousel } from "./ProductsCarousel";
 import { InfoCards } from "./InfoCards";
+import { DesktopHomeSkeleton } from "./DesktopHomeSkeleton";
 
 const iconMap = {
 	Laptop,
@@ -83,8 +84,15 @@ export const HomeView = ({
 		!categoryLinks ||
 		!categories ||
 		!dollarRate
+		// true
 	)
-		return <div>Loading...</div>;
+		return (
+			<div className=" flex flex-col gap-3 w-full max-w-[1160px] mx-auto">
+				<div>
+					<DesktopHomeSkeleton />
+				</div>
+			</div>
+		);
 
 	return (
 		<div className=" flex flex-col gap-3 w-full max-w-[1160px] mx-auto">

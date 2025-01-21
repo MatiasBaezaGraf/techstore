@@ -41,7 +41,7 @@ export const CategoriesCarousel = ({
 										src={cdnUrl + "/categoryImages/" + category.imageName}
 										alt={category.name}
 										fill
-										className="rounded-lg object-cover"
+										className={`rounded-lg object-cover fade-in`}
 									/>
 									<div className="absolute inset-0 bg-black border border-neutral-700 rounded-lg bg-opacity-40 flex items-center justify-center">
 										<h3 className="text-white text-2xl font-bold">

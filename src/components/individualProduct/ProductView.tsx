@@ -193,7 +193,7 @@ export const ProductView = ({
 									src={`${cdnUrl}/productImages/${product.imageName}`}
 									alt={`${product.name}`}
 									layout="fill"
-									className="rounded-lg shadow-black shadow-lg border border-neutral-500 object-cover"
+									className="rounded-lg shadow-black shadow-lg border border-neutral-500 object-cover fade-in"
 								/>
 							</div>
 						</CarouselItem>

@@ -39,7 +39,7 @@ export const CarouselProductCard = ({
 							src={`${cdnUrl}/productImages/${product.imageName}`}
 							alt={product.name}
 							fill
-							className="p-4 bg-white rounded-t-lg hover:scale-105 transform duration-200 object-contain"
+							className="p-4 bg-white rounded-t-lg hover:scale-105 transform duration-200 object-contain fade-in"
 						/>
 					</div>
 				</Link>

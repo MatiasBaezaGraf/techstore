@@ -43,7 +43,7 @@ export const ProductCard = ({
 								src={`${cdnUrl}/productImages/${product.imageName}`}
 								alt={product.name}
 								fill
-								className="rounded-t-md hover:scale-105 transform duration-200 object-contain"
+								className="rounded-t-md hover:scale-105 transform duration-200 object-contain fade-in"
 							/>
 						</div>
 					</Link>
