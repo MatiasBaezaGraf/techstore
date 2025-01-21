@@ -22,11 +22,7 @@ export async function GET() {
 		return NextResponse.json(dollarRate);
 	} catch (error) {
 		return NextResponse.json(
-			{
-				error: {
-					error: `Error al obtener la cotización del dólar: ${error}`,
-				},
-			},
+			{ message: `Error al obtener la cotización del dólar: ${error}` },
 			{ status: 500 }
 		);
 	}

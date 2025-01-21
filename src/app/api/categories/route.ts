@@ -1,7 +1,7 @@
 import { createClient } from "@/app/utils/server";
 import { NextResponse } from "next/server";
 
-export async function GET() {
+export async function GET(): Promise<NextResponse> {
 	try {
 		const fetchCategories = async () => {
 			const supabase = await createClient();
@@ -17,13 +17,9 @@ export async function GET() {
 
 		return NextResponse.json(categories);
 	} catch (error) {
-		return {
-			status: 500,
-			body: {
-				error: {
-					error: `Error al obtener las categorías: ${error}`,
-				},
-			},
-		};
+		return NextResponse.json(
+			{ message: `Error al obtener las categorías: ${error}` },
+			{ status: 500 }
+		);
 	}
 }
