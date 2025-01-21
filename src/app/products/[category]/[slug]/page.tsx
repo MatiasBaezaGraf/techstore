@@ -1,5 +1,7 @@
+import { Product } from "@/app/types/types";
 import { createClient } from "@/app/utils/server";
 import { ProductView } from "@/components/individualProduct/ProductView";
+import { baseUrl } from "@/lib/utils";
 import { redirect } from "next/navigation";
 
 export type Params = Promise<{ slug: string; category: string }>;
@@ -18,7 +20,7 @@ export default async function ProductPage({ params }: { params: Params }) {
 			.eq("slug", slug)
 			.eq("show", true);
 
-		if (error) {
+		if (error || data.length === 0) {
 			redirect("/search");
 		}
 
@@ -28,50 +30,42 @@ export default async function ProductPage({ params }: { params: Params }) {
 	async function getCategories() {
 		"use server";
 
-		const supabase = await createClient();
+		const response = await fetch(`${baseUrl}/api/categories`, {
+			cache: "force-cache",
+			next: {
+				tags: ["categories"],
+			},
+		});
 
-		const { data, error } = await supabase.from("categories").select("*");
-
-		if (error) {
-			redirect("/search");
-		}
-
-		return data;
+		return response.json();
 	}
 
 	async function getCategoryProducts() {
 		"use server";
 
-		const supabase = await createClient();
+		const response = await fetch(`${baseUrl}/api/products`, {
+			cache: "force-cache",
+			next: {
+				tags: ["products"],
+			},
+		});
 
-		// Realiza un join entre productos y categorías para buscar por nombre de categoría
-		const { data, error } = await supabase
-			.from("products")
-			.select("*")
-			.eq("show", true); // Incluye el campo `name` de `categories`
+		const data: Product[] = await response.json();
 
-		if (error) {
-			redirect("/search");
-		}
-
-		return data;
+		return data.filter((product) => product.show === true);
 	}
 
 	async function getDollarRate() {
 		"use server";
 
-		const supabase = await createClient();
+		const response = await fetch(`${baseUrl}/api/dollar`, {
+			cache: "force-cache",
+			next: {
+				tags: ["dollar"],
+			},
+		});
 
-		const { data, error } = await supabase
-			.from("settings")
-			.select("*")
-			.eq("name", "dollar_value");
-
-		if (error) {
-			throw error;
-		}
-
-		return data[0].value;
+		return response.json();
 	}
 
 	return (

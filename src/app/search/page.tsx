@@ -1,54 +1,48 @@
 import { SearchView } from "@/components/search/SearchView";
-import { createClient } from "../utils/server";
 import { Suspense } from "react";
+import { Product } from "../types/types";
+import { baseUrl } from "@/lib/utils";
 
 export default function SearchPage() {
 	async function fetchProducts() {
 		"use server";
 
-		const supabase = await createClient();
+		const response = await fetch(`${baseUrl}/api/products`, {
+			cache: "force-cache",
+			next: {
+				tags: ["products"],
+			},
+		});
 
-		const { data, error } = await supabase
-			.from("products")
-			.select("*")
-			.eq("show", true);
+		const data: Product[] = await response.json();
 
-		if (error) {
-			throw error;
-		}
-
-		return data;
+		return data.filter((product) => product.show === true);
 	}
 
 	async function fetchCategories() {
 		"use server";
 
-		const supabase = await createClient();
+		const response = await fetch(`${baseUrl}/api/categories`, {
+			cache: "force-cache",
+			next: {
+				tags: ["categories"],
+			},
+		});
 
-		const { data, error } = await supabase.from("categories").select("*");
-
-		if (error) {
-			throw error;
-		}
-
-		return data;
+		return response.json();
 	}
 
 	async function fetchDollarRate() {
 		"use server";
 
-		const supabase = await createClient();
+		const response = await fetch(`${baseUrl}/api/dollar`, {
+			cache: "force-cache",
+			next: {
+				tags: ["dollar"],
+			},
+		});
 
-		const { data, error } = await supabase
-			.from("settings")
-			.select("*")
-			.eq("name", "dollar_value");
-
-		if (error) {
-			throw error;
-		}
-
-		return data[0].value;
+		return response.json();
 	}
 
 	return (

@@ -2,6 +2,8 @@ import { NewProductForm } from "@/components/products/NewProductForm";
 
 import { createClient } from "@/app/utils/server";
 import { ProductToInsert } from "@/app/types/types";
+import { revalidateTag } from "next/cache";
+import { baseUrl } from "@/lib/utils";
 
 export default function NewProductPage() {
 	async function insertProduct(product: ProductToInsert) {
@@ -46,20 +48,21 @@ export default function NewProductPage() {
 				throw imageError;
 			}
 		}
+
+		revalidateTag("products");
 	}
 
 	async function fetchCategories() {
 		"use server";
 
-		const supabase = await createClient();
+		const response = await fetch(`${baseUrl}/api/categories`, {
+			cache: "force-cache",
+			next: {
+				tags: ["categories"],
+			},
+		});
 
-		const { data, error } = await supabase.from("categories").select("*");
-
-		if (error) {
-			throw error;
-		}
-
-		return data;
+		return response.json();
 	}
 
 	return (

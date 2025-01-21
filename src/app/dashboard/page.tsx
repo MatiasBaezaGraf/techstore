@@ -1,19 +1,21 @@
 import { ProductsDashboard } from "@/components/products/dashboard/ProductsDashboard";
 import { createClient } from "../utils/server";
 import { Product } from "../types/types";
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
+import { baseUrl } from "@/lib/utils";
 
 export default async function DashboardPage() {
 	async function fetchProducts() {
 		"use server";
 
-		const supabase = await createClient();
+		const response = await fetch(`${baseUrl}/api/products`, {
+			cache: "force-cache",
+			next: {
+				tags: ["products"],
+			},
+		});
 
-		const { data, error } = await supabase.from("products").select("*");
-
-		if (error) {
-			throw error;
-		}
+		const data: Product[] = await response.json();
 
 		return data.reverse();
 	}
@@ -21,15 +23,14 @@ export default async function DashboardPage() {
 	async function fetchCategories() {
 		"use server";
 
-		const supabase = await createClient();
+		const response = await fetch(`${baseUrl}/api/categories`, {
+			cache: "force-cache",
+			next: {
+				tags: ["categories"],
+			},
+		});
 
-		const { data, error } = await supabase.from("categories").select("*");
-
-		if (error) {
-			throw error;
-		}
-
-		return data;
+		return response.json();
 	}
 
 	async function updateProductShow(product: Product) {
@@ -49,6 +50,8 @@ export default async function DashboardPage() {
 		if (error) {
 			throw error;
 		}
+
+		revalidateTag("products");
 	}
 
 	async function deleteProduct(product: Product) {
@@ -72,24 +75,21 @@ export default async function DashboardPage() {
 			await supabase.storage.from("productImages").remove([product.imageName]);
 		}
 
+		revalidateTag("products");
 		revalidatePath("/dashboard");
 	}
 
 	async function fetchDollarRate() {
 		"use server";
 
-		const supabase = await createClient();
+		const response = await fetch(`${baseUrl}/api/dollar`, {
+			cache: "force-cache",
+			next: {
+				tags: ["dollar"],
+			},
+		});
 
-		const { data, error } = await supabase
-			.from("settings")
-			.select("*")
-			.eq("name", "dollar_value");
-
-		if (error) {
-			throw error;
-		}
-
-		return data[0].value;
+		return response.json();
 	}
 
 	async function updateDollarRate(rate: number) {
@@ -105,6 +105,8 @@ export default async function DashboardPage() {
 		if (error) {
 			throw error;
 		}
+
+		revalidateTag("dollar");
 
 		return rate;
 	}

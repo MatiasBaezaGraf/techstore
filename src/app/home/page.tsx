@@ -1,4 +1,3 @@
-import { createClient } from "../utils/server";
 import { ProductsCarousel } from "@/components/home/ProductsCarousel";
 import { CategoriesCarousel } from "@/components/home/CategoriesCarousel";
 import { SearchInputForm } from "@/components/general/SearchInputForm";
@@ -18,8 +17,9 @@ import {
 import { InfoCards } from "@/components/home/InfoCards";
 import Link from "next/link";
 import { LinksBar } from "@/components/home/LinksBar";
-import { Category, HomeLink } from "../types/types";
+import { Category, HomeLink, Product } from "../types/types";
 import { Button } from "@/components/ui/button";
+import { baseUrl } from "@/lib/utils";
 
 const iconMap = {
 	Laptop,
@@ -38,18 +38,20 @@ export default async function HomePage() {
 		categoryId?: string;
 		highlighted?: boolean;
 	}) => {
-		const supabase = await createClient();
-		const { data, error } = await supabase
-			.from("products")
-			.select("*")
-			.eq("show", true);
+		const response = await fetch(`${baseUrl}/api/products`, {
+			cache: "force-cache",
+			next: {
+				tags: ["products"],
+			},
+		});
 
-		if (error) {
-			throw error;
-		}
+		const data: Product[] = await response.json();
 
 		// Aplicar los filtros
 		let filteredData = data || [];
+
+		// Usar solo los productos que tienen show = true
+		filteredData = filteredData.filter((product) => product.show === true);
 
 		if (categoryId) {
 			filteredData = filteredData.filter(
@@ -66,30 +68,26 @@ export default async function HomePage() {
 		return filteredData;
 	};
 
-	// Fetch categorías
-	const fetchCategories = async () => {
-		const supabase = await createClient();
-		const { data, error } = await supabase.from("categories").select("*");
+	const fetchDollarRate = async () => {
+		const response = await fetch(`${baseUrl}/api/dollar`, {
+			cache: "force-cache",
+			next: {
+				tags: ["dollar"],
+			},
+		});
 
-		if (error) {
-			throw error;
-		}
-		return data;
+		return response.json();
 	};
 
-	const fetchDollarRate = async () => {
-		const supabase = await createClient();
+	const fetchCategories = async () => {
+		const response = await fetch(`${baseUrl}/api/categories`, {
+			cache: "force-cache",
+			next: {
+				tags: ["categories"],
+			},
+		});
 
-		const { data, error } = await supabase
-			.from("settings")
-			.select("*")
-			.eq("name", "dollar_value");
-
-		if (error) {
-			throw error;
-		}
-
-		return data[0].value;
+		return response.json();
 	};
 
 	// Ejecutar fetch de datos en paralelo

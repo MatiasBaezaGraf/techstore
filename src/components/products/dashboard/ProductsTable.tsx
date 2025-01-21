@@ -79,7 +79,9 @@ export const ProductsTable = ({
 					<TableHead className="w-[100px] hidden md:table-cell">
 						Imagen
 					</TableHead>
-					<TableHead className="w-[320px]">Nombre</TableHead>
+					<TableHead className="w-[280px]">
+						<div className="w-[280px]">Nombre</div>
+					</TableHead>
 					<TableHead>Categoría</TableHead>
 					<TableHead>Stock</TableHead>
 					<TableHead>Precio</TableHead>
@@ -106,7 +108,7 @@ export const ProductsTable = ({
 							)}
 						</TableCell>
 						<TableCell>
-							<span className="line-clamp-2">{product.name}</span>
+							<span className="line-clamp-2 text-ellipsis">{product.name}</span>
 						</TableCell>
 						<TableCell>
 							{

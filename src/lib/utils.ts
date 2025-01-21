@@ -8,3 +8,5 @@ export function cn(...inputs: ClassValue[]) {
 export function formatPrice(price: number) {
 	return price.toLocaleString("es-AR", {});
 }
+
+export const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
