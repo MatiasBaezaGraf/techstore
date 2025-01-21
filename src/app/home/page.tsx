@@ -77,13 +77,29 @@ export default async function HomePage() {
 		return data;
 	};
 
+	const fetchDollarRate = async () => {
+		const supabase = await createClient();
+
+		const { data, error } = await supabase
+			.from("settings")
+			.select("*")
+			.eq("name", "dollar_value");
+
+		if (error) {
+			throw error;
+		}
+
+		return data[0].value;
+	};
+
 	// Ejecutar fetch de datos en paralelo
-	const [highlightedProducts, smartphones, computers, categories] =
+	const [highlightedProducts, smartphones, computers, categories, dollarRate] =
 		await Promise.all([
 			fetchHighlightedProducts({ highlighted: true }),
 			fetchHighlightedProducts({ categoryId: "1" }),
 			fetchHighlightedProducts({ categoryId: "2" }),
 			fetchCategories(),
+			fetchDollarRate(),
 		]);
 
 	const categoryLinks: HomeLink[] = categories.map((category: Category) => {
@@ -155,6 +171,7 @@ export default async function HomePage() {
 					icon={<Star size={24} />}
 					categories={categories}
 					products={highlightedProducts}
+					dollarRate={dollarRate}
 				/>
 			</div>
 
@@ -168,6 +185,7 @@ export default async function HomePage() {
 					icon={<TabletSmartphone size={24} />}
 					categories={categories}
 					products={smartphones}
+					dollarRate={dollarRate}
 				/>
 			</div>
 
@@ -177,6 +195,7 @@ export default async function HomePage() {
 					icon={<Laptop size={24} />}
 					categories={categories}
 					products={computers}
+					dollarRate={dollarRate}
 				/>
 			</div>
 		</div>

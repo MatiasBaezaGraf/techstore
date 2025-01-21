@@ -16,11 +16,13 @@ export const ProductsCarousel = ({
 	products,
 	title,
 	icon,
+	dollarRate,
 }: {
 	title: string;
 	icon?: React.ReactNode;
 	categories: Category[];
 	products: Product[];
+	dollarRate: number;
 }) => {
 	const getProductCategory = (product: Product) => {
 		const category = categories.find(
@@ -51,6 +53,7 @@ export const ProductsCarousel = ({
 							<CarouselProductCard
 								product={product}
 								category={getProductCategory(product)}
+								dollarRate={dollarRate}
 							/>
 						</CarouselItem>
 					))}

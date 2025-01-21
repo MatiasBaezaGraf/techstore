@@ -27,6 +27,7 @@ import { LinksBar } from "../home/LinksBar";
 import { ProductsCarousel } from "../home/ProductsCarousel";
 import { MobileSkeleton } from "./MobileSkeleton";
 import { DesktopSkeleton } from "./DesktopSkeleton";
+import { formatPrice } from "@/lib/utils";
 
 const iconMap = {
 	Laptop,
@@ -41,16 +42,19 @@ export const ProductView = ({
 	getProduct,
 	getCategories,
 	getCategoryProducts,
+	getDollarRate,
 }: {
 	productSlug: string;
 	getProduct: (slug: string) => Promise<Product>;
 	getCategories: () => Promise<Category[]>;
 	getCategoryProducts: () => Promise<Product[]>;
+	getDollarRate: () => Promise<number>;
 }) => {
 	const cdnUrl = process.env.NEXT_PUBLIC_SUPABASE_CDN_URL;
 	const whatsappNumber = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER;
 	const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
 
+	const [dollarRate, setDollarRate] = useState<number | null>(null);
 	const [product, setProduct] = useState<Product | null>(null);
 	const [categories, setCategories] = useState<Category[] | null>(null);
 	const [category, setCategory] = useState<Category | null>(null);
@@ -85,6 +89,7 @@ export const ProductView = ({
 		getProduct(productSlug).then((data) => setProduct(data));
 		getCategories().then((data) => setCategories(data));
 		getCategoryProducts().then((data) => setCategoryProducts(data));
+		getDollarRate().then((data) => setDollarRate(data));
 	}, [productSlug]);
 
 	useEffect(() => {
@@ -93,15 +98,11 @@ export const ProductView = ({
 				(c) => c.id === parseInt(product.category_id)
 			);
 
-			// console.log(categoryx);
-
 			setCategory(categoryToSet!);
 		}
 	}, [product, categories]);
 
-	// console.log(product, categories, category);
-
-	if (!product || !categories || !category || !categoryProducts)
+	if (!product || !categories || !category || !categoryProducts || !dollarRate)
 		return (
 			<div className="min-h-withNav flex w-full max-w-[1160px] mx-auto items-stretch flex-col">
 				<div className="md:hidden">
@@ -192,8 +193,7 @@ export const ProductView = ({
 									src={`${cdnUrl}/productImages/${product.imageName}`}
 									alt={`${product.name}`}
 									layout="fill"
-									objectFit="cover"
-									className="rounded-lg shadow-black shadow-lg border border-neutral-500"
+									className="rounded-lg shadow-black shadow-lg border border-neutral-500 object-cover"
 								/>
 							</div>
 						</CarouselItem>
@@ -231,10 +231,13 @@ export const ProductView = ({
 						</div>
 					</div>
 					<div className="space-y">
-						<p className="text-4xl font-bold text-accent ">
-							U$ {product.price}
-						</p>
 						<p className="text-alternative/80 text-sm">Precio final</p>
+						<p className="text-4xl font-bold text-accent ">
+							U$ {formatPrice(product.price)}
+						</p>
+						<p className="text-[#838383] text-lg">
+							{`AR$ ${formatPrice(product.price * dollarRate)}`}
+						</p>
 					</div>
 					<div className="space-y">
 						<h2 className="text-lg font-bold text-alternative mb-3">
@@ -265,6 +268,7 @@ export const ProductView = ({
 				icon={<LayoutGrid size={22} />}
 				categories={categories}
 				products={categoryProducts}
+				dollarRate={dollarRate}
 			/>
 		</div>
 	);

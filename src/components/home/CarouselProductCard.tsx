@@ -7,13 +7,16 @@ import { Badge } from "../ui/badge";
 import Link from "next/link";
 import { Button } from "../ui/button";
 import { MessageCircle } from "lucide-react";
+import { formatPrice } from "@/lib/utils";
 
 export const CarouselProductCard = ({
 	product,
 	category,
+	dollarRate,
 }: {
 	product: Product;
 	category: Category;
+	dollarRate: number;
 }) => {
 	const cdnUrl = process.env.NEXT_PUBLIC_SUPABASE_CDN_URL;
 	const whatsappNumber = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER;
@@ -35,16 +38,22 @@ export const CarouselProductCard = ({
 						<Image
 							src={`${cdnUrl}/productImages/${product.imageName}`}
 							alt={product.name}
-							layout="fill"
+							fill
 							className="p-4 bg-white rounded-t-lg hover:scale-105 transform duration-200 object-contain"
 						/>
 					</div>
 				</Link>
 				<CardContent className="p-2 flex flex-col items-start justify-start flex-1 h-full">
 					<div className="flex items-center gap-2 mb-1 justify-between w-full">
-						<h3 className="text-xl font-bold text-accent">
-							U$ {product.price}
-						</h3>
+						<div className="flex flex-col">
+							<h3 className="text-xl font-bold text-accent">
+								U$ {formatPrice(product.price)}
+							</h3>
+
+							<p className="text-[#838383] text-sm font-bold text-nowrap">
+								AR$ {formatPrice(product.price * dollarRate)}
+							</p>
+						</div>
 						<Badge
 							className="w-min px-2"
 							variant={product.new ? "accent" : "default"}

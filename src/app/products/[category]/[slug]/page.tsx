@@ -57,12 +57,30 @@ export default async function ProductPage({ params }: { params: Params }) {
 		return data;
 	}
 
+	async function getDollarRate() {
+		"use server";
+
+		const supabase = await createClient();
+
+		const { data, error } = await supabase
+			.from("settings")
+			.select("*")
+			.eq("name", "dollar_value");
+
+		if (error) {
+			throw error;
+		}
+
+		return data[0].value;
+	}
+
 	return (
 		<ProductView
 			productSlug={slug}
 			getProduct={getProduct}
 			getCategories={getCategories}
 			getCategoryProducts={getCategoryProducts}
+			getDollarRate={getDollarRate}
 		/>
 	);
 }

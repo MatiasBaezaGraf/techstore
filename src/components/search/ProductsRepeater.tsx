@@ -5,9 +5,11 @@ import { SearchX } from "lucide-react";
 export const ProductsRepeater = ({
 	products,
 	categories,
+	dollarRate,
 }: {
 	products: Product[];
 	categories: Category[];
+	dollarRate: number;
 }) => {
 	const getProductCategory = (categoryId: string) => {
 		return categories.find((category) => category.id === parseInt(categoryId))!;
@@ -31,6 +33,7 @@ export const ProductsRepeater = ({
 					key={product.id}
 					product={product}
 					category={getProductCategory(product.category_id)}
+					dollarRate={dollarRate}
 				/>
 			))}
 		</div>

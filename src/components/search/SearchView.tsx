@@ -46,15 +46,18 @@ const iconMap = {
 export const SearchView = ({
 	fetchProducts,
 	fetchCategories,
+	fetchDollarRate,
 }: {
 	fetchProducts: () => Promise<Product[]>;
 	fetchCategories: () => Promise<Category[]>;
+	fetchDollarRate: () => Promise<number>;
 }) => {
 	const searchParams = useSearchParams();
 	const router = useRouter();
 
 	const [products, setProducts] = useState<Product[] | null>(null);
 	const [categories, setCategories] = useState<Category[] | null>(null);
+	const [dollarRate, setDollarRate] = useState<number | null>(null);
 
 	const [filteredProducts, setFilteredProducts] = useState<Product[] | null>(
 		null
@@ -175,6 +178,10 @@ export const SearchView = ({
 
 		fetchCategories().then((data) => {
 			setCategories(data);
+		});
+
+		fetchDollarRate().then((data) => {
+			setDollarRate(data);
 		});
 	}, []);
 
@@ -387,7 +394,7 @@ export const SearchView = ({
 		router.push(`/search`);
 	};
 
-	if (!products || !categories)
+	if (!products || !categories || !dollarRate)
 		// if (true)
 		return (
 			<div className="min-h-withNav  w-full max-w-[1160px] mx-auto">
@@ -490,6 +497,7 @@ export const SearchView = ({
 					<ProductsRepeater
 						products={pagination.pageItems}
 						categories={categories}
+						dollarRate={dollarRate}
 					/>
 
 					<div className="hidden md:block mt-8">

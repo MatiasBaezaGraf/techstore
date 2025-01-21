@@ -12,8 +12,8 @@ export const Logo = ({ size = 16 }: { size?: number }) => {
 			<Image
 				src="/logoTransparent.png"
 				alt="Logo de la tienda"
-				layout="fill"
-				objectFit="contain"
+				fill
+				className="object-contain"
 			/>
 		</div>
 	);

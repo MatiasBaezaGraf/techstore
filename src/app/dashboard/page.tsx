@@ -75,11 +75,47 @@ export default async function DashboardPage() {
 		revalidatePath("/dashboard");
 	}
 
+	async function fetchDollarRate() {
+		"use server";
+
+		const supabase = await createClient();
+
+		const { data, error } = await supabase
+			.from("settings")
+			.select("*")
+			.eq("name", "dollar_value");
+
+		if (error) {
+			throw error;
+		}
+
+		return data[0].value;
+	}
+
+	async function updateDollarRate(rate: number) {
+		"use server";
+
+		const supabase = await createClient();
+
+		const { error } = await supabase
+			.from("settings")
+			.update({ value: rate })
+			.eq("name", "dollar_value");
+
+		if (error) {
+			throw error;
+		}
+
+		return rate;
+	}
+
 	return (
 		<ProductsDashboard
 			fetchProducts={fetchProducts}
 			fetchCategories={fetchCategories}
+			fetchDollarRate={fetchDollarRate}
 			updateProductShow={updateProductShow}
+			updateDollarRate={updateDollarRate}
 			deleteProduct={deleteProduct}
 		/>
 	);

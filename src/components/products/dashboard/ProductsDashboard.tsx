@@ -37,16 +37,21 @@ import {
 	PaginationContent,
 	PaginationItem,
 } from "@/components/ui/pagination";
+import { DollarRateAdjuster } from "./DollarRateAdjuster";
 
 export const ProductsDashboard = ({
 	fetchProducts,
 	fetchCategories,
+	fetchDollarRate,
 	updateProductShow,
+	updateDollarRate,
 	deleteProduct,
 }: {
 	fetchProducts: () => Promise<Product[]>;
 	fetchCategories: () => Promise<Category[]>;
+	fetchDollarRate: () => Promise<number>;
 	updateProductShow: (product: Product) => void;
+	updateDollarRate: (rate: number) => Promise<number>;
 	deleteProduct: (product: Product) => void;
 }) => {
 	const [fetchedProducts, setFetchedProducts] = useState<Product[] | null>(
@@ -54,6 +59,7 @@ export const ProductsDashboard = ({
 	);
 	const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
 	const [categories, setCategories] = useState<Category[]>([]);
+	const [dollarRate, setDollarRate] = useState<number | null>(null);
 	const [filters, setFilters] = useState<Filters>({
 		name: "",
 		category_id: "",
@@ -104,6 +110,14 @@ export const ProductsDashboard = ({
 		return `${start}-${end}`;
 	};
 
+	const captureDollarRateUpdate = async (rate: number) => {
+		const newRate = await updateDollarRate(rate);
+
+		setDollarRate(newRate);
+
+		return newRate;
+	};
+
 	// Cargar productos y categorías al inicio
 	useEffect(() => {
 		const getAndSetProducts = async () => {
@@ -117,8 +131,14 @@ export const ProductsDashboard = ({
 			setCategories(categories);
 		};
 
+		const getAndSetDollarRate = async () => {
+			const rate = await fetchDollarRate();
+			setDollarRate(rate);
+		};
+
 		getAndSetProducts();
 		getAndSetCategories();
+		getAndSetDollarRate();
 	}, []);
 
 	// Reaplicar filtros cuando cambien
@@ -126,7 +146,7 @@ export const ProductsDashboard = ({
 		applyFilters();
 	}, [filters, fetchedProducts]);
 
-	if (!fetchedProducts)
+	if (!fetchedProducts || !dollarRate)
 		return (
 			<div className="container mx-auto p-4 flex flex-col h-screen justify-center items-center">
 				<Loader2 size={50} className="mx-auto animate-spin" />
@@ -140,11 +160,13 @@ export const ProductsDashboard = ({
 		<div className="w-full max-w-[1160px] p-4 mx-auto">
 			<div className="flex justify-between items-center mb-4">
 				<h1 className="text-2xl font-bold">Productos</h1>
-				<Link href="/dashboard/new-product">
-					<Button size="sm">
-						<Plus className="mr-2 h-4 w-4" /> Agregar
-					</Button>
-				</Link>
+				<div className="flex items-center space-x-2">
+					<Link href="/dashboard/new-product">
+						<Button size="sm">
+							<Plus className="mr-2 h-4 w-4" /> Agregar
+						</Button>
+					</Link>
+				</div>
 			</div>
 
 			<div className="mb-4">
@@ -161,121 +183,129 @@ export const ProductsDashboard = ({
 				</div>
 			</div>
 
-			<Sheet>
-				<div
-					className={`flex items-center bg-white mb-4 w-fit border rounded-md ${
-						filters.category_id || filters.visibility || filters.name
-							? "border-secondary"
-							: ""
-					}`}
-				>
-					<SheetTrigger asChild>
-						<Button
-							variant="ghost"
-							size="sm"
-							className={`h-10 ${
-								filters.category_id || filters.visibility || filters.name
-									? "rounded-r-none"
-									: ""
-							}`}
-						>
-							<Filter className="mr-2 h-4 w-4" /> Filtros
-						</Button>
-					</SheetTrigger>
-					{(filters.category_id || filters.visibility || filters.name) && (
-						<Button
-							variant="ghost"
-							onClick={() =>
-								setFilters({ name: "", category_id: "", visibility: null })
-							}
-							className="h-10 rounded-l-none"
-						>
-							<XIcon size={5} />
-						</Button>
-					)}
-				</div>
-				<SheetContent side="left" className="min-h-screen">
-					<SheetHeader>
-						<SheetTitle>Filtros</SheetTitle>
-						<SheetDescription>
-							Ajusta los filtros para encontrar los productos que buscas.
-						</SheetDescription>
-					</SheetHeader>
-					<div className="py-4 space-y-4">
-						<div>
-							<Label htmlFor="categoria">Categoría</Label>
-							<Select
-								value={
-									filters.category_id === "" ? "todas" : filters.category_id
-								}
-								onValueChange={(value) =>
-									setFilters((prev) => ({
-										...prev,
-										category_id: value === "todas" ? "" : value,
-									}))
-								}
+			<div className="flex items-start justify-between">
+				<Sheet>
+					<div
+						className={`flex items-center bg-white mb-4 w-fit border rounded-md ${
+							filters.category_id || filters.visibility || filters.name
+								? "border-secondary"
+								: ""
+						}`}
+					>
+						<SheetTrigger asChild>
+							<Button
+								variant="ghost"
+								size="sm"
+								className={`h-10 ${
+									filters.category_id || filters.visibility || filters.name
+										? "rounded-r-none"
+										: ""
+								}`}
 							>
-								<SelectTrigger id="categoria">
-									<SelectValue placeholder="Selecciona una categoría" />
-								</SelectTrigger>
-								<SelectContent>
-									<SelectItem value="todas">Todas</SelectItem>
-									{categories.map((category) => (
-										<SelectItem
-											key={category.id}
-											value={category.id.toString()}
-										>
-											{category.name}
-										</SelectItem>
-									))}
-								</SelectContent>
-							</Select>
-						</div>
-
-						<div>
-							<Label htmlFor="visibilidad">Visibilidad</Label>
-							<Select
-								value={
-									filters.visibility === null
-										? "todos"
-										: filters.visibility
-										? "visible"
-										: "oculto"
+								<Filter className="mr-2 h-4 w-4" /> Filtros
+							</Button>
+						</SheetTrigger>
+						{(filters.category_id || filters.visibility || filters.name) && (
+							<Button
+								variant="ghost"
+								onClick={() =>
+									setFilters({ name: "", category_id: "", visibility: null })
 								}
-								onValueChange={(value) =>
-									setFilters((prev) => ({
-										...prev,
-										visibility: value === "todos" ? null : value === "visible",
-									}))
-								}
+								className="h-10 rounded-l-none"
 							>
-								<SelectTrigger id="visibilidad">
-									<SelectValue placeholder="Selecciona visibilidad" />
-								</SelectTrigger>
-								<SelectContent>
-									<SelectItem value="todos">Todos</SelectItem>
-									<SelectItem value="visible">Visible</SelectItem>
-									<SelectItem value="oculto">Oculto</SelectItem>
-								</SelectContent>
-							</Select>
-						</div>
+								<XIcon size={5} />
+							</Button>
+						)}
 					</div>
-					<SheetClose asChild>
-						<Button className="w-full mt-4">Aplicar Filtros</Button>
-					</SheetClose>
-					<SheetClose asChild>
-						<Button
-							onClick={() =>
-								setFilters({ name: "", category_id: "", visibility: null })
-							}
-							variant="outline"
-							className="w-full mt-2"
-						>
-							Limpiar Filtros
-						</Button>
-					</SheetClose>
-				</SheetContent>
-			</Sheet>
+					<SheetContent side="left" className="min-h-screen">
+						<SheetHeader>
+							<SheetTitle>Filtros</SheetTitle>
+							<SheetDescription>
+								Ajusta los filtros para encontrar los productos que buscas.
+							</SheetDescription>
+						</SheetHeader>
+						<div className="py-4 space-y-4">
+							<div>
+								<Label htmlFor="categoria">Categoría</Label>
+								<Select
+									value={
+										filters.category_id === "" ? "todas" : filters.category_id
+									}
+									onValueChange={(value) =>
+										setFilters((prev) => ({
+											...prev,
+											category_id: value === "todas" ? "" : value,
+										}))
+									}
+								>
+									<SelectTrigger id="categoria">
+										<SelectValue placeholder="Selecciona una categoría" />
+									</SelectTrigger>
+									<SelectContent>
+										<SelectItem value="todas">Todas</SelectItem>
+										{categories.map((category) => (
+											<SelectItem
+												key={category.id}
+												value={category.id.toString()}
+											>
+												{category.name}
+											</SelectItem>
+										))}
+									</SelectContent>
+								</Select>
+							</div>
+
+							<div>
+								<Label htmlFor="visibilidad">Visibilidad</Label>
+								<Select
+									value={
+										filters.visibility === null
+											? "todos"
+											: filters.visibility
+											? "visible"
+											: "oculto"
+									}
+									onValueChange={(value) =>
+										setFilters((prev) => ({
+											...prev,
+											visibility:
+												value === "todos" ? null : value === "visible",
+										}))
+									}
+								>
+									<SelectTrigger id="visibilidad">
+										<SelectValue placeholder="Selecciona visibilidad" />
+									</SelectTrigger>
+									<SelectContent>
+										<SelectItem value="todos">Todos</SelectItem>
+										<SelectItem value="visible">Visible</SelectItem>
+										<SelectItem value="oculto">Oculto</SelectItem>
+									</SelectContent>
+								</Select>
+							</div>
+						</div>
+						<SheetClose asChild>
+							<Button className="w-full mt-4">Aplicar Filtros</Button>
+						</SheetClose>
+						<SheetClose asChild>
+							<Button
+								onClick={() =>
+									setFilters({ name: "", category_id: "", visibility: null })
+								}
+								variant="outline"
+								className="w-full mt-2"
+							>
+								Limpiar Filtros
+							</Button>
+						</SheetClose>
+					</SheetContent>
+				</Sheet>
+
+				<DollarRateAdjuster
+					dollarRate={dollarRate}
+					updateDollarRate={captureDollarRateUpdate}
+				/>
+			</div>
 
 			<div className="flex flex-col border items-end rounded-md bg-white">
 				<Pagination className="w-fit mx-0">
@@ -313,6 +343,7 @@ export const ProductsDashboard = ({
 				<ProductsTable
 					products={getPaginatedProducts()}
 					categories={categories}
+					dollarRate={dollarRate}
 					updateProductShow={updateProductShow}
 					deleteProduct={onDeleteProduct}
 				/>

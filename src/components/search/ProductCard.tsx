@@ -5,13 +5,16 @@ import { Badge } from "../ui/badge";
 import Link from "next/link";
 import { Button } from "../ui/button";
 import { MessageCircle } from "lucide-react";
+import { formatPrice } from "@/lib/utils";
 
 export const ProductCard = ({
 	product,
 	category,
+	dollarRate,
 }: {
 	product: Product;
 	category: Category;
+	dollarRate: number;
 }) => {
 	const cdnUrl = process.env.NEXT_PUBLIC_SUPABASE_CDN_URL;
 	const whatsappNumber = process.env.NEXT_PUBLIC_WHATSAPP_NUMBER;
@@ -28,7 +31,7 @@ export const ProductCard = ({
 	return (
 		<Card
 			key={product.id}
-			className="bg-secondary-dark transform duration-200 border-neutral-600 shadow-black shadow hover:shadow-lg hover:border-primary hover:scale-[1.01] overflow-hidden h-[335px] flex flex-col"
+			className="bg-secondary-dark transform duration-200 border-neutral-600 shadow-black shadow hover:shadow-lg hover:border-primary hover:scale-[1.01] overflow-hidden h-[355px] flex flex-col"
 		>
 			<CardContent className="p-0 flex-1 flex flex-col">
 				<div className={`flex flex-col h-full`}>
@@ -39,19 +42,24 @@ export const ProductCard = ({
 							<Image
 								src={`${cdnUrl}/productImages/${product.imageName}`}
 								alt={product.name}
-								layout="fill"
+								fill
 								className="rounded-t-md hover:scale-105 transform duration-200 object-contain"
 							/>
 						</div>
 					</Link>
 
 					<div className="flex-1 flex justify-start flex-col p-2">
-						<span className="flex flex-row items-center gap-2 mb-1">
-							<p className="text-primary text-lg font-bold text-nowrap">
-								U$ {product.price}
-							</p>
+						<span className="flex flex-row justify-between items-start gap-2 mb-1">
+							<div className="flex flex-col">
+								<p className="text-primary text-lg font-bold text-nowrap">
+									U$ {formatPrice(product.price)}
+								</p>
+								<p className="text-[#838383] text-sm font-bold text-nowrap">
+									AR$ {formatPrice(product.price * dollarRate)}
+								</p>
+							</div>
 							{product.new && (
-								<Badge className=" bg-accent hover:bg-accent  text-alternative  border-0 h-4 px-2">
+								<Badge className=" bg-accent hover:bg-accent  text-alternative  border-0 h-4 px-2 mt-[6px]">
 									Nuevo
 								</Badge>
 							)}

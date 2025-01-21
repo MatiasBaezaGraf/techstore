@@ -34,6 +34,23 @@ export default function SearchPage() {
 		return data;
 	}
 
+	async function fetchDollarRate() {
+		"use server";
+
+		const supabase = await createClient();
+
+		const { data, error } = await supabase
+			.from("settings")
+			.select("*")
+			.eq("name", "dollar_value");
+
+		if (error) {
+			throw error;
+		}
+
+		return data[0].value;
+	}
+
 	return (
 		<Suspense
 			fallback={
@@ -68,6 +85,7 @@ export default function SearchPage() {
 			<SearchView
 				fetchProducts={fetchProducts}
 				fetchCategories={fetchCategories}
+				fetchDollarRate={fetchDollarRate}
 			/>
 		</Suspense>
 	);

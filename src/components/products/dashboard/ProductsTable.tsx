@@ -23,15 +23,18 @@ import { Switch } from "@/components/ui/switch";
 import { toast } from "@/hooks/use-toast";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { formatPrice } from "@/lib/utils";
 
 export const ProductsTable = ({
 	products,
 	categories,
+	dollarRate,
 	updateProductShow,
 	deleteProduct,
 }: {
 	products: Product[];
 	categories: Category[];
+	dollarRate: number;
 	updateProductShow: (product: Product) => void;
 	deleteProduct: (product: Product) => void;
 }) => {
@@ -76,7 +79,7 @@ export const ProductsTable = ({
 					<TableHead className="w-[100px] hidden md:table-cell">
 						Imagen
 					</TableHead>
-					<TableHead>Nombre</TableHead>
+					<TableHead className="w-[320px]">Nombre</TableHead>
 					<TableHead>Categoría</TableHead>
 					<TableHead>Stock</TableHead>
 					<TableHead>Precio</TableHead>
@@ -116,9 +119,14 @@ export const ProductsTable = ({
 							<span className="font-medium text-nowrap">{product.stock}</span>
 						</TableCell>
 						<TableCell>
-							<span className="font-medium text-nowrap">
-								U$ {product.price}
-							</span>
+							<div className="flex flex-col items-start">
+								<span className="font-medium text-nowrap">
+									U$ {formatPrice(product.price)}
+								</span>
+								<span className="font-medium text-nowrap text-secondary/45">
+									AR$ {formatPrice(product.price * dollarRate)}
+								</span>
+							</div>
 						</TableCell>
 						<TableCell>
 							<Switch

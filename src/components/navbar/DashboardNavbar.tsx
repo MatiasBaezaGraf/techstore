@@ -31,20 +31,25 @@ export const DashboardNavbar = ({
 							variant="outline"
 							className="hover:border-secondary/70 text-secondary/70"
 						>
-							<House className="h-4 w-4 mr-2" />
-							Inicio
+							<House className="h-4 w-4 md:mr-2" />
+							<span className="hidden md:block">Inicio</span>
 						</Button>
 					</Link>
-					<span className="text-sm text-secondary/60">{user?.email}</span>
+					<span className="text-sm text-secondary/60 hidden md:block">
+						{user?.email}
+					</span>
 				</div>
+				<span className="text-sm text-secondary/60 md:hidden">
+					{user?.email}
+				</span>
 				<Dialog>
 					<DialogTrigger asChild>
 						<Button
 							variant="outline"
 							className="hover:border-red-600 text-red-600 hover:text-red-700"
 						>
-							<Power className="h-4 w-4 mr-2" />
-							Cerrar sesión
+							<Power className="h-4 w-4 md:mr-2" />
+							<span className="hidden md:block">Cerrar</span>
 						</Button>
 					</DialogTrigger>
 					<DialogContent>
