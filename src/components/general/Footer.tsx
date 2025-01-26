@@ -13,7 +13,7 @@ export const Footer = () => {
 
 					<div className="flex flex-wrap justify-center gap-6">
 						<Link
-							href="https://instagram.com/techstore"
+							href="https://www.instagram.com/techstore.lsm/"
 							target="_blank"
 							rel="noopener noreferrer"
 							className="flex items-center gap-2 text-alternative hover:text-accent/80"
